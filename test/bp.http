@@ -1,0 +1,19 @@
+###
+GET https://sandbox.api.sap.com/s4hanacloud/sap/opu/odata/sap/API_BUSINESS_PARTNER/A_BusinessPartner
+    ?$top=10
+    &$inlinecount=allpages
+    #&$filter=Customer ne ''
+    &$filter=BusinessPartner eq '1000038'
+APIKey: {{$dotenv apiKey}}
+Accept: application/json
+### Mock
+GET http://localhost:4004/v2/api-business-partner/A_BusinessPartner
+    ?$top=10
+    &$inlinecount=allpages
+    #&$filter=Customer ne ''
+    #&$filter=BusinessPartner eq '1000038'
+Accept: application/json
+
+### Mock
+GET http://localhost:4004/api-business-partner/A_BusinessPartner?$top=1&$filter=BusinessPartner%20eq%20'1000038'
+Accept: application/json

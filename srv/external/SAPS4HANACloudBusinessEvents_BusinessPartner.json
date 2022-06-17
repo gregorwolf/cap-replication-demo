@@ -1,0 +1,131 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Business Partner",
+    "version": "1.0",
+    "description": "A business partner is a an organization (company, subsidiary), person or group of people or organizations in which your company has a business interest. The following events are available for business partner: \n - Business partner changed \n - Business partner created"
+  },
+  "externalDocs": {
+    "description": "Business Documentation",
+    "url": "https://help.sap.com/viewer/3c916ef10fc240c9afc594b346ffaf77/latest/en-US/2319a6d5872e47ff97ff470f61d12d65.html"
+  },
+  "components": {
+    "schemas": {
+      "sap.s4.beh.businesspartner.v1.BusinessPartner.Changed.v1": {
+        "type": "object",
+        "properties": { "BusinessPartner": { "type": "string" } }
+      },
+      "sap.s4.beh.businesspartner.v1.BusinessPartner.Created.v1": {
+        "type": "object",
+        "properties": { "BusinessPartner": { "type": "string" } }
+      },
+      "CloudContext": {
+        "title": "Schema for the CloudEvents context fields.",
+        "description": "This is a schema specification for the context fields as per CloudEvent standards.",
+        "type": "object",
+        "properties": {
+          "specversion": {
+            "description": "The version of the CloudEvents specification which the event uses. This enables the interpretation of the context.",
+            "type": "string"
+          },
+          "type": {
+            "description": "Type of occurrence which has happened. Often this property is used for routing, observability, policy enforcement, etc.",
+            "type": "string",
+            "minLength": 1
+          },
+          "source": {
+            "description": "This describes the event producer.",
+            "type": "string",
+            "format": "uri-reference"
+          },
+          "subject": {
+            "description": "The subject of the event in the context of the event producer (identified by source).",
+            "type": "string",
+            "minLength": 1
+          },
+          "id": {
+            "description": "ID of the event.",
+            "type": "string",
+            "minLength": 1
+          },
+          "time": {
+            "description": "Timestamp of when the occurrence happened. Must adhere to RFC 3339.",
+            "type": "string",
+            "format": "date-time"
+          },
+          "datacontenttype": {
+            "description": "Describe the data encoding format",
+            "type": "string"
+          }
+        },
+        "required": ["id", "specversion", "source", "type"]
+      }
+    }
+  },
+  "paths": {
+    "/sap.s4.beh.businesspartner.v1.BusinessPartner.Changed.v1": {
+      "post": {
+        "tags": ["Changed"],
+        "x-payload": "",
+        "description": "This event is raised when a Business Partner record is changed",
+        "summary": "Business Partner Changed",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "type": "object",
+                    "$ref": "#/components/schemas/CloudContext"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "description": "Data Fields",
+                        "$ref": "#/components/schemas/sap.s4.beh.businesspartner.v1.BusinessPartner.Changed.v1"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": { "default": { "description": "Successful" } }
+      }
+    },
+    "/sap.s4.beh.businesspartner.v1.BusinessPartner.Created.v1": {
+      "post": {
+        "tags": ["Created"],
+        "x-payload": "",
+        "description": "This event is raised when a Business Partner record is created",
+        "summary": "Business Partner Created",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "type": "object",
+                    "$ref": "#/components/schemas/CloudContext"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "description": "Data Fields",
+                        "$ref": "#/components/schemas/sap.s4.beh.businesspartner.v1.BusinessPartner.Created.v1"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": { "default": { "description": "Successful" } }
+      }
+    }
+  }
+}

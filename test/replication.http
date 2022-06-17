@@ -1,0 +1,18 @@
+###
+GET http://localhost:4004/replication/$metadata
+###
+GET http://localhost:4004/replication/BusinessPartner
+    ?$count=true
+Accept: application/json
+###
+POST http://localhost:4004/replication/loadBusinessPartner
+Content-Type: application/json
+
+{
+    "BlockSize": 2
+}
+###
+POST http://localhost:4004/replication/deleteAllBusinessPartners
+Content-Type: application/json
+
+{}

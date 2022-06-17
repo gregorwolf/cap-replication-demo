@@ -1,0 +1,63 @@
+{
+  "name": "cap-replication-demo",
+  "version": "0.0.1",
+  "description": "Demonstrate replication with CAP",
+  "repository": "<Add your repository here>",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@sap/cds": "^5",
+    "@sap/cds-odata-v2-adapter-proxy": "^1",
+    "express": "^4"
+  },
+  "devDependencies": {
+    "sqlite3": "^5.0.2"
+  },
+  "scripts": {
+    "start": "cds run"
+  },
+  "eslintConfig": {
+    "extends": "eslint:recommended",
+    "env": {
+      "es2020": true,
+      "node": true,
+      "jest": true,
+      "mocha": true
+    },
+    "globals": {
+      "SELECT": true,
+      "INSERT": true,
+      "UPDATE": true,
+      "DELETE": true,
+      "CREATE": true,
+      "DROP": true,
+      "CDL": true,
+      "CQL": true,
+      "CXL": true,
+      "cds": true
+    },
+    "rules": {
+      "no-console": "off",
+      "require-atomic-updates": "off"
+    }
+  },
+  "cds": {
+    "requires": {
+      "messaging": {
+        "[development]": {
+          "kind": "file-based-messaging"
+        }
+      },
+      "API_BUSINESS_PARTNER": {
+        "kind": "odata-v2",
+        "model": "srv/external/API_BUSINESS_PARTNER"
+      },
+      "db": {
+        "kind": "sqlite",
+        "credentials": {
+          "database": "sqlite.db"
+        }
+      }
+    }
+  }
+}
