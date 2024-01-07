@@ -21,6 +21,7 @@ async function getBusinessPartnerFromS4(bp) {
   LOG.info("received BP from S/4", s4BusinessPartner.BusinessPartnerFullName);
   return s4BusinessPartner;
 }
+
 async function getBusinessPartnersFromS4(limit) {
   const API_BUSINESS_PARTNER = await cds.connect.to("API_BUSINESS_PARTNER");
   const { A_BusinessPartner } = API_BUSINESS_PARTNER.entities;
@@ -29,26 +30,13 @@ async function getBusinessPartnersFromS4(limit) {
   );
   return s4BusinessPartner;
 }
+
 async function upsertBusinessPartner(s4BusinessPartner) {
   const bp = s4BusinessPartner.BusinessPartner;
   const db = await cds.connect.to("db");
   const { BusinessPartner } = db.entities;
-  const dbBusinessPartner = await db.run(
-    SELECT.one(BusinessPartner).where({
-      BusinessPartner: bp,
-    })
-  );
-  if (dbBusinessPartner === null) {
-    LOG.info("Create BP ", bp);
-    await db.run(INSERT.into(BusinessPartner).entries([s4BusinessPartner]));
-  } else {
-    LOG.info("Update BP ", bp);
-    await db.run(
-      UPDATE(BusinessPartner, {
-        BusinessPartner: bp,
-      }).with(s4BusinessPartner)
-    );
-  }
+  LOG.info("Upsert BP ", bp);
+  await db.run(UPSERT(s4BusinessPartner).into(BusinessPartner));
 }
 
 async function upsertBusinessPartnerFromS4(bp) {
@@ -59,17 +47,9 @@ async function upsertBusinessPartnerFromS4(bp) {
 module.exports = cds.service.impl(async function () {
   const db = await cds.connect.to("db");
   const { BusinessPartner } = db.entities;
-  /*
-  const API_BUSINESS_PARTNER = await cds.connect.to("API_BUSINESS_PARTNER");
-  API_BUSINESS_PARTNER.on("BusinessPartner.Changed", async (msg) => {
-    const { BusinessPartner: bp } = msg.data;
-    LOG.info(
-      '--> Event received: BusinessPartner changed (ID="' + bp + '")'
-    );
-    await upsertBusinessPartnerFromS4(bp);
-  });
-  */
+
   const messaging = await cds.connect.to("messaging");
+
   messaging.on(
     "sap.s4.beh.businesspartner.v1.BusinessPartner.Changed.v1",
     async (msg) => {
@@ -78,6 +58,7 @@ module.exports = cds.service.impl(async function () {
       await upsertBusinessPartnerFromS4(bp);
     }
   );
+
   this.on("loadBusinessPartner", async function (req) {
     const blockSize = req.data.BlockSize;
     LOG.info("loadBusinessPartner - blockSize:", blockSize);
@@ -96,6 +77,7 @@ module.exports = cds.service.impl(async function () {
       }
     }
   });
+
   this.on("deleteAllBusinessPartners", async function (req) {
     await db.run(DELETE.from(BusinessPartner));
   });
