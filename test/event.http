@@ -1,14 +1,14 @@
 ###
-GET http://localhost:4004/event/$metadata
+GET http://localhost:4004/odata/v4/event/$metadata
 ###
-POST http://localhost:4004/event/bpChanged
+POST http://localhost:4004/odata/v4/event/bpChanged
 Content-Type: application/json
 
 {
     "BusinessPartner": "1000038"
 }
 ###
-POST http://localhost:4004/event/bpChanged
+POST http://localhost:4004/odata/v4/event/bpChanged
 Content-Type: application/json
 
 {
