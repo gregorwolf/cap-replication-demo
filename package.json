@@ -42,6 +42,9 @@
     }
   },
   "cds": {
+    "cov2ap": {
+      "plugin": true
+    },
     "requires": {
       "messaging": {
         "[development]": {
