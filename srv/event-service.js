@@ -1,4 +1,6 @@
 const cds = require("@sap/cds");
+const LOG = cds.log("event-service");
+
 module.exports = cds.service.impl(async function () {
   const messaging = await cds.connect.to("messaging");
   this.on("bpChanged", async function (req) {
@@ -7,7 +9,7 @@ module.exports = cds.service.impl(async function () {
     const eventPayload = {
       BusinessPartner: req.data.BusinessPartner,
     };
-    console.log("< emitting:", eventName, eventPayload);
+    LOG.info("< emitting:", eventName, eventPayload);
     messaging.emit(eventName, eventPayload);
   });
 });

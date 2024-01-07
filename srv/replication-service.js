@@ -1,4 +1,5 @@
 const cds = require("@sap/cds");
+const LOG = cds.log("replication-service");
 
 async function getBusinessPartnerCountFromS4() {
   const API_BUSINESS_PARTNER = await cds.connect.to("API_BUSINESS_PARTNER");
@@ -17,10 +18,7 @@ async function getBusinessPartnerFromS4(bp) {
       BusinessPartner: bp,
     })
   );
-  console.log(
-    "received BP from S/4",
-    s4BusinessPartner.BusinessPartnerFullName
-  );
+  LOG.info("received BP from S/4", s4BusinessPartner.BusinessPartnerFullName);
   return s4BusinessPartner;
 }
 async function getBusinessPartnersFromS4(limit) {
@@ -41,10 +39,10 @@ async function upsertBusinessPartner(s4BusinessPartner) {
     })
   );
   if (dbBusinessPartner === null) {
-    console.log("Create BP ", bp);
+    LOG.info("Create BP ", bp);
     await db.run(INSERT.into(BusinessPartner).entries([s4BusinessPartner]));
   } else {
-    console.log("Update BP ", bp);
+    LOG.info("Update BP ", bp);
     await db.run(
       UPDATE(BusinessPartner, {
         BusinessPartner: bp,
@@ -65,7 +63,7 @@ module.exports = cds.service.impl(async function () {
   const API_BUSINESS_PARTNER = await cds.connect.to("API_BUSINESS_PARTNER");
   API_BUSINESS_PARTNER.on("BusinessPartner.Changed", async (msg) => {
     const { BusinessPartner: bp } = msg.data;
-    console.log(
+    LOG.info(
       '--> Event received: BusinessPartner changed (ID="' + bp + '")'
     );
     await upsertBusinessPartnerFromS4(bp);
@@ -76,24 +74,22 @@ module.exports = cds.service.impl(async function () {
     "sap.s4.beh.businesspartner.v1.BusinessPartner.Changed.v1",
     async (msg) => {
       const { BusinessPartner: bp } = msg.data;
-      console.log(
-        '--> Event received: BusinessPartner changed (ID="' + bp + '")'
-      );
+      LOG.info('--> Event received: BusinessPartner changed (ID="' + bp + '")');
       await upsertBusinessPartnerFromS4(bp);
     }
   );
   this.on("loadBusinessPartner", async function (req) {
     const blockSize = req.data.BlockSize;
-    console.log("loadBusinessPartner - blockSize:", blockSize);
+    LOG.info("loadBusinessPartner - blockSize:", blockSize);
     const count = await getBusinessPartnerCountFromS4();
-    console.log("count:", count);
+    LOG.info("count:", count);
     for (let top = 0; top < count; top = top + blockSize) {
       const limit = {
         offset: top,
         rows: blockSize,
       };
       const s4BusinessPartners = await getBusinessPartnersFromS4(limit);
-      console.log("Number of BPs:", s4BusinessPartners.length);
+      LOG.info("Number of BPs:", s4BusinessPartners.length);
       for (let index = 0; index < s4BusinessPartners.length; index++) {
         const s4BusinessPartner = s4BusinessPartners[index];
         await upsertBusinessPartner(s4BusinessPartner);
