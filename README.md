@@ -3,7 +3,7 @@
 ## Setup
 
 ```
-cds deploy --to sqlite --with-mocks
+cds deploy --to sqlite:sqlite.db --with-mocks
 ```
 
 ## Startup
