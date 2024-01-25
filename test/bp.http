@@ -1,10 +1,16 @@
-###
-GET https://sandbox.api.sap.com/s4hanacloud/sap/opu/odata/sap/API_BUSINESS_PARTNER/A_BusinessPartner
+### Sample request to the api.sap.com Sandbox
+GET {{$dotenv s4hurl}}/sap/opu/odata/sap/API_BUSINESS_PARTNER/A_BusinessPartner
     ?$top=10
     &$inlinecount=allpages
     #&$filter=Customer ne ''
     &$filter=BusinessPartner eq '1000038'
 APIKey: {{$dotenv apiKey}}
+Accept: application/json
+### Real S/4HANA Cloud System
+GET {{$dotenv s4hurl}}/sap/opu/odata/sap/API_BUSINESS_PARTNER/A_BusinessPartner
+    ?$top=10
+    &$inlinecount=allpages
+Authorization: Basic {{$dotenv username}}:{{$dotenv password}}
 Accept: application/json
 ### Mock
 GET http://localhost:4004/odata/v2/api-business-partner/A_BusinessPartner
