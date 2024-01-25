@@ -1,5 +1,5 @@
 ### Sample request to the api.sap.com Sandbox
-GET {{$dotenv s4hurl}}/sap/opu/odata/sap/API_BUSINESS_PARTNER/A_BusinessPartner
+GET {{$dotenv s4hana}}/sap/opu/odata/sap/API_BUSINESS_PARTNER/A_BusinessPartner
     ?$top=10
     &$inlinecount=allpages
     #&$filter=Customer ne ''
@@ -7,11 +7,31 @@ GET {{$dotenv s4hurl}}/sap/opu/odata/sap/API_BUSINESS_PARTNER/A_BusinessPartner
 APIKey: {{$dotenv apiKey}}
 Accept: application/json
 ### Real S/4HANA Cloud System
-GET {{$dotenv s4hurl}}/sap/opu/odata/sap/API_BUSINESS_PARTNER/A_BusinessPartner
+GET {{$dotenv s4hana}}/sap/opu/odata/sap/API_BUSINESS_PARTNER/A_BusinessPartner
     ?$top=10
     &$inlinecount=allpages
 Authorization: Basic {{$dotenv username}}:{{$dotenv password}}
 Accept: application/json
+
+### Get CSRF Token
+# @name fetchCSRF
+HEAD {{$dotenv s4hana}}/sap/opu/odata/sap/API_BUSINESS_PARTNER/
+Authorization: Basic {{$dotenv username}}:{{$dotenv password}}
+X-CSRF-Token: fetch
+###
+@csrfToken = {{fetchCSRF.response.headers.x-csrf-token}}
+
+### Create Business Partner
+POST {{$dotenv s4hana}}/sap/opu/odata/sap/API_BUSINESS_PARTNER/A_BusinessPartner
+Authorization: Basic {{$dotenv username}}:{{$dotenv password}}
+X-CSRF-Token: {{csrfToken}}
+Accept: application/json
+Content-Type: application/json
+
+{
+    "BusinessPartnerCategory": "2",
+    "OrganizationBPName1": "Computerservice Wolf"
+}
 ### Mock
 GET http://localhost:4004/odata/v2/api-business-partner/A_BusinessPartner
     ?$top=10
