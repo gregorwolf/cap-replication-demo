@@ -21,11 +21,13 @@ async function getEntityFromS4(bp) {
   return s4entity;
 }
 
-async function getEntitysFromS4(s4entityName, limit) {
+async function getEntitysFromS4(s4entityName, limit, columns) {
   const API_BUSINESS_PARTNER = await cds.connect.to("API_BUSINESS_PARTNER");
-  const s4entity = await API_BUSINESS_PARTNER.run(
-    SELECT(`${s4entityName}`).limit(limit.rows, limit.offset)
-  );
+  let query = SELECT(`${s4entityName}`).limit(limit.rows, limit.offset);
+  if (columns) {
+    query = query.columns(columns);
+  }
+  const s4entity = await API_BUSINESS_PARTNER.run(query);
   return s4entity;
 }
 
@@ -44,12 +46,15 @@ module.exports = cds.service.impl(async function () {
   const { BusinessPartner, CustomerSalesAreaText } = db.entities;
 
   const maps4entityToLocal = [
-    /*
     {
       s4entityName: "A_BusinessPartner",
       localEntity: BusinessPartner,
+      columns: [
+        "BusinessPartner",
+        "BusinessPartnerFullName",
+        "BusinessPartnerIsBlocked",
+      ],
     },
-    */
     {
       s4entityName: "A_CustomerSalesAreaText",
       localEntity: CustomerSalesAreaText,
@@ -80,7 +85,11 @@ module.exports = cds.service.impl(async function () {
           offset: top,
           rows: blockSize,
         };
-        const s4entities = await getEntitysFromS4(map.s4entityName, limit);
+        const s4entities = await getEntitysFromS4(
+          map.s4entityName,
+          limit,
+          map.columns
+        );
         LOG.info("Number of Entities:", s4entities.length);
         for (let index = 0; index < s4entities.length; index++) {
           const s4entity = s4entities[index];
