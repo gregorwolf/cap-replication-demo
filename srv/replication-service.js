@@ -27,7 +27,7 @@ async function getEntityFromS4(bp) {
   return s4entity;
 }
 
-async function getEntitysFromS4(s4entityName, limit, columns) {
+async function getEntitiesFromS4(s4entityName, limit, columns) {
   const API_BUSINESS_PARTNER = await cds.connect.to("API_BUSINESS_PARTNER");
   let query = SELECT(`${s4entityName}`).limit(limit.rows, limit.offset);
   if (columns) {
@@ -39,7 +39,7 @@ async function getEntitysFromS4(s4entityName, limit, columns) {
 
 async function upsertEntity(entityName, s4entity) {
   const db = await cds.connect.to("db");
-  await db.run(UPSERT(s4entity).into(`${entityName}`));
+  await db.run(UPSERT(s4entity).into(entityName));
 }
 
 async function upsertBusinessPartnerFromS4(bp) {
@@ -78,9 +78,9 @@ module.exports = cds.service.impl(async function () {
     }
   );
 
-  this.on("loadBusinessPartner", async function (req) {
+  this.on("loadEntitiesFromS4", async function (req) {
     const blockSize = req.data.BlockSize;
-    LOG.info("loadBusinessPartner - blockSize:", blockSize);
+    LOG.info("loadEntitiesFromS4 - blockSize:", blockSize);
     // loop through maps4entityToLocal
     for (let index = 0; index < maps4entityToLocal.length; index++) {
       const map = maps4entityToLocal[index];
@@ -91,7 +91,7 @@ module.exports = cds.service.impl(async function () {
           offset: top,
           rows: blockSize,
         };
-        const s4entities = await getEntitysFromS4(
+        const s4entities = await getEntitiesFromS4(
           map.s4entityName,
           limit,
           map.columns
@@ -105,7 +105,7 @@ module.exports = cds.service.impl(async function () {
     }
   });
 
-  this.on("deleteAllBusinessPartners", async function (req) {
+  this.on("deleteAllReplicatedEntities", async function (req) {
     for (let index = 0; index < maps4entityToLocal.length; index++) {
       const map = maps4entityToLocal[index];
       LOG.info("delete entries for S/4HANA Entity:", map.s4entityName);

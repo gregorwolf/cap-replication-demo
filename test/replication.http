@@ -5,20 +5,21 @@ GET http://localhost:4004/odata/v4/replication/$metadata
 ###
 GET http://localhost:4004/odata/v4/replication/BusinessPartner
     ?$count=true
+    &$select=BusinessPartner,BusinessPartnerFullName,BusinessPartnerIsBlocked
 Accept: application/json
 ###
 GET http://localhost:4004/odata/v4/replication/CustomerSalesAreaText
     ?$count=true
 Accept: application/json
 ###
-POST http://localhost:4004/odata/v4/replication/loadBusinessPartner
+POST http://localhost:4004/odata/v4/replication/loadEntitiesFromS4
 Content-Type: application/json
 
 {
     "BlockSize": 2
 }
 ###
-POST http://localhost:4004/odata/v4/replication/deleteAllBusinessPartners
+POST http://localhost:4004/odata/v4/replication/deleteAllReplicatedEntities
 Content-Type: application/json
 
 {}

@@ -4,7 +4,7 @@ service ReplicationService {
 
     entity BusinessPartner       as projection on replication.BusinessPartner;
     entity CustomerSalesAreaText as projection on replication.CustomerSalesAreaText;
-    action loadBusinessPartner(BlockSize : Integer);
-    action deleteAllBusinessPartners();
+    action loadEntitiesFromS4(BlockSize : Integer);
+    action deleteAllReplicatedEntities();
 
 }
