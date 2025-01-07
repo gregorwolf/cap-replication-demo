@@ -7,6 +7,9 @@
   "private": true,
   "dependencies": {
     "@cap-js-community/odata-v2-adapter": "^1",
+    "@sap-cloud-sdk/connectivity": "^3.25.0",
+    "@sap-cloud-sdk/http-client": "^3.25.0",
+    "@sap-cloud-sdk/resilience": "^3.25.0",
     "@sap/cds": "^8",
     "express": "^4"
   },
