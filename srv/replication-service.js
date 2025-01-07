@@ -3,10 +3,16 @@ const LOG = cds.log("replication-service");
 
 async function getEntityCountFromS4(s4entityName) {
   const API_BUSINESS_PARTNER = await cds.connect.to("API_BUSINESS_PARTNER");
+  // works when remote API is mocked locally
   const s4entity = await API_BUSINESS_PARTNER.run(
-    SELECT`count(*) as count`.from(s4entityName)
+    SELECT`count() as count`.from(s4entityName)
   );
   return s4entity[0].count;
+  /*
+  // works when remote API is connected
+  const count = await API_BUSINESS_PARTNER.get(`/${s4entityName}/$count`);
+  return parseInt(count);
+  */
 }
 
 async function getEntityFromS4(bp) {
@@ -21,17 +27,19 @@ async function getEntityFromS4(bp) {
   return s4entity;
 }
 
-async function getEntitysFromS4(s4entityName, limit) {
+async function getEntitiesFromS4(s4entityName, limit, columns) {
   const API_BUSINESS_PARTNER = await cds.connect.to("API_BUSINESS_PARTNER");
-  const s4entity = await API_BUSINESS_PARTNER.run(
-    SELECT(`${s4entityName}`).limit(limit.rows, limit.offset)
-  );
+  let query = SELECT(`${s4entityName}`).limit(limit.rows, limit.offset);
+  if (columns) {
+    query = query.columns(columns);
+  }
+  const s4entity = await API_BUSINESS_PARTNER.run(query);
   return s4entity;
 }
 
 async function upsertEntity(entityName, s4entity) {
   const db = await cds.connect.to("db");
-  await db.run(UPSERT(s4entity).into(`${entityName}`));
+  await db.run(UPSERT(s4entity).into(entityName));
 }
 
 async function upsertBusinessPartnerFromS4(bp) {
@@ -44,12 +52,15 @@ module.exports = cds.service.impl(async function () {
   const { BusinessPartner, CustomerSalesAreaText } = db.entities;
 
   const maps4entityToLocal = [
-    /*
     {
       s4entityName: "A_BusinessPartner",
       localEntity: BusinessPartner,
+      columns: [
+        "BusinessPartner",
+        "BusinessPartnerFullName",
+        "BusinessPartnerIsBlocked",
+      ],
     },
-    */
     {
       s4entityName: "A_CustomerSalesAreaText",
       localEntity: CustomerSalesAreaText,
@@ -67,9 +78,9 @@ module.exports = cds.service.impl(async function () {
     }
   );
 
-  this.on("loadBusinessPartner", async function (req) {
+  this.on("loadEntitiesFromS4", async function (req) {
     const blockSize = req.data.BlockSize;
-    LOG.info("loadBusinessPartner - blockSize:", blockSize);
+    LOG.info("loadEntitiesFromS4 - blockSize:", blockSize);
     // loop through maps4entityToLocal
     for (let index = 0; index < maps4entityToLocal.length; index++) {
       const map = maps4entityToLocal[index];
@@ -80,7 +91,11 @@ module.exports = cds.service.impl(async function () {
           offset: top,
           rows: blockSize,
         };
-        const s4entities = await getEntitysFromS4(map.s4entityName, limit);
+        const s4entities = await getEntitiesFromS4(
+          map.s4entityName,
+          limit,
+          map.columns
+        );
         LOG.info("Number of Entities:", s4entities.length);
         for (let index = 0; index < s4entities.length; index++) {
           const s4entity = s4entities[index];
@@ -90,7 +105,7 @@ module.exports = cds.service.impl(async function () {
     }
   });
 
-  this.on("deleteAllBusinessPartners", async function (req) {
+  this.on("deleteAllReplicatedEntities", async function (req) {
     for (let index = 0; index < maps4entityToLocal.length; index++) {
       const map = maps4entityToLocal[index];
       LOG.info("delete entries for S/4HANA Entity:", map.s4entityName);
