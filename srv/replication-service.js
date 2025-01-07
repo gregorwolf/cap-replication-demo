@@ -1,52 +1,60 @@
 const cds = require("@sap/cds");
 const LOG = cds.log("replication-service");
 
-async function getBusinessPartnerCountFromS4() {
+async function getEntityCountFromS4(s4entityName) {
   const API_BUSINESS_PARTNER = await cds.connect.to("API_BUSINESS_PARTNER");
-  const { A_BusinessPartner } = API_BUSINESS_PARTNER.entities;
-  const s4BusinessPartner = await API_BUSINESS_PARTNER.run(
-    SELECT`count(BusinessPartner) as count`.from`A_BusinessPartner`
+  const s4entity = await API_BUSINESS_PARTNER.run(
+    SELECT`count(*) as count`.from(s4entityName)
   );
-  return s4BusinessPartner[0].count;
+  return s4entity[0].count;
 }
 
-async function getBusinessPartnerFromS4(bp) {
+async function getEntityFromS4(bp) {
   const API_BUSINESS_PARTNER = await cds.connect.to("API_BUSINESS_PARTNER");
   const { A_BusinessPartner } = API_BUSINESS_PARTNER.entities;
-  const s4BusinessPartner = await API_BUSINESS_PARTNER.run(
+  const s4entity = await API_BUSINESS_PARTNER.run(
     SELECT.one(A_BusinessPartner).where({
       BusinessPartner: bp,
     })
   );
-  LOG.info("received BP from S/4", s4BusinessPartner.BusinessPartnerFullName);
-  return s4BusinessPartner;
+  LOG.info("received BP from S/4", s4entity.BusinessPartnerFullName);
+  return s4entity;
 }
 
-async function getBusinessPartnersFromS4(limit) {
+async function getEntitysFromS4(s4entityName, limit) {
   const API_BUSINESS_PARTNER = await cds.connect.to("API_BUSINESS_PARTNER");
-  const { A_BusinessPartner } = API_BUSINESS_PARTNER.entities;
-  const s4BusinessPartner = await API_BUSINESS_PARTNER.run(
-    SELECT(A_BusinessPartner).limit(limit.rows, limit.offset)
+  const s4entity = await API_BUSINESS_PARTNER.run(
+    SELECT(`${s4entityName}`).limit(limit.rows, limit.offset)
   );
-  return s4BusinessPartner;
+  return s4entity;
 }
 
-async function upsertBusinessPartner(s4BusinessPartner) {
-  const bp = s4BusinessPartner.BusinessPartner;
+async function upsertEntity(entityName, s4entity) {
   const db = await cds.connect.to("db");
-  const { BusinessPartner } = db.entities;
-  LOG.info("Upsert BP ", bp);
-  await db.run(UPSERT(s4BusinessPartner).into(BusinessPartner));
+  await db.run(UPSERT(s4entity).into(`${entityName}`));
 }
 
 async function upsertBusinessPartnerFromS4(bp) {
-  const s4BusinessPartner = await getBusinessPartnerFromS4(bp);
-  await upsertBusinessPartner(s4BusinessPartner);
+  const s4entity = await getEntityFromS4(bp);
+  await upsertBusinessPartner(s4entity);
 }
 
 module.exports = cds.service.impl(async function () {
   const db = await cds.connect.to("db");
-  const { BusinessPartner } = db.entities;
+  const { BusinessPartner, CustomerSalesAreaText } = db.entities;
+
+  const maps4entityToLocal = [
+    /*
+    {
+      s4entityName: "A_BusinessPartner",
+      localEntity: BusinessPartner,
+    },
+    */
+    {
+      s4entityName: "A_CustomerSalesAreaText",
+      localEntity: CustomerSalesAreaText,
+    },
+  ];
 
   const messaging = await cds.connect.to("messaging");
 
@@ -62,23 +70,31 @@ module.exports = cds.service.impl(async function () {
   this.on("loadBusinessPartner", async function (req) {
     const blockSize = req.data.BlockSize;
     LOG.info("loadBusinessPartner - blockSize:", blockSize);
-    const count = await getBusinessPartnerCountFromS4();
-    LOG.info("count:", count);
-    for (let top = 0; top < count; top = top + blockSize) {
-      const limit = {
-        offset: top,
-        rows: blockSize,
-      };
-      const s4BusinessPartners = await getBusinessPartnersFromS4(limit);
-      LOG.info("Number of BPs:", s4BusinessPartners.length);
-      for (let index = 0; index < s4BusinessPartners.length; index++) {
-        const s4BusinessPartner = s4BusinessPartners[index];
-        await upsertBusinessPartner(s4BusinessPartner);
+    // loop through maps4entityToLocal
+    for (let index = 0; index < maps4entityToLocal.length; index++) {
+      const map = maps4entityToLocal[index];
+      const count = await getEntityCountFromS4(map.s4entityName);
+      LOG.info("count:", count);
+      for (let top = 0; top < count; top = top + blockSize) {
+        const limit = {
+          offset: top,
+          rows: blockSize,
+        };
+        const s4entities = await getEntitysFromS4(map.s4entityName, limit);
+        LOG.info("Number of Entities:", s4entities.length);
+        for (let index = 0; index < s4entities.length; index++) {
+          const s4entity = s4entities[index];
+          await upsertEntity(map.localEntity, s4entity);
+        }
       }
     }
   });
 
   this.on("deleteAllBusinessPartners", async function (req) {
-    await db.run(DELETE.from(BusinessPartner));
+    for (let index = 0; index < maps4entityToLocal.length; index++) {
+      const map = maps4entityToLocal[index];
+      LOG.info("delete entries for S/4HANA Entity:", map.s4entityName);
+      await db.run(DELETE.from(map.localEntity));
+    }
   });
 });

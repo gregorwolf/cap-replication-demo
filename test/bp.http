@@ -46,3 +46,9 @@ GET http://localhost:4004/odata/v4/api-business-partner/A_BusinessPartner
     &$count=true
 #    &$filter=BusinessPartner%20eq%20'1000038'
 Accept: application/json
+
+###
+GET http://localhost:4004/odata/v4/api-business-partner/A_CustomerSalesAreaText
+    ?$top=1
+    &$count=true
+Accept: application/json

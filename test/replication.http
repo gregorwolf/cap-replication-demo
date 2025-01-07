@@ -1,7 +1,13 @@
 ###
+GET http://localhost:4004/odata/v4/replication/
+###
 GET http://localhost:4004/odata/v4/replication/$metadata
 ###
 GET http://localhost:4004/odata/v4/replication/BusinessPartner
+    ?$count=true
+Accept: application/json
+###
+GET http://localhost:4004/odata/v4/replication/CustomerSalesAreaText
     ?$count=true
 Accept: application/json
 ###
