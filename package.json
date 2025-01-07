@@ -15,7 +15,8 @@
     "sqlite3": "^5"
   },
   "scripts": {
-    "start": "cds run"
+    "start": "cds run",
+    "deploy:local": "cds deploy --with-mocks"
   },
   "eslintConfig": {
     "extends": "eslint:recommended",

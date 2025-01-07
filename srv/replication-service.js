@@ -44,10 +44,12 @@ module.exports = cds.service.impl(async function () {
   const { BusinessPartner, CustomerSalesAreaText } = db.entities;
 
   const maps4entityToLocal = [
+    /*
     {
       s4entityName: "A_BusinessPartner",
       localEntity: BusinessPartner,
     },
+    */
     {
       s4entityName: "A_CustomerSalesAreaText",
       localEntity: CustomerSalesAreaText,
@@ -91,7 +93,7 @@ module.exports = cds.service.impl(async function () {
   this.on("deleteAllBusinessPartners", async function (req) {
     for (let index = 0; index < maps4entityToLocal.length; index++) {
       const map = maps4entityToLocal[index];
-      LOG.info("delete entries for Entity:", map.localEntity);
+      LOG.info("delete entries for S/4HANA Entity:", map.s4entityName);
       await db.run(DELETE.from(map.localEntity));
     }
   });
