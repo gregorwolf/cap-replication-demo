@@ -2,6 +2,7 @@
 GET {{$dotenv s4hana}}/sap/opu/odata/sap/API_BUSINESS_PARTNER/A_BusinessPartner
     ?$top=10
     &$inlinecount=allpages
+    &$select=BusinessPartner,BusinessPartnerFullName,BusinessPartnerIsBlocked
     #&$filter=Customer ne ''
     &$filter=BusinessPartner eq '1000038'
 APIKey: {{$dotenv apiKey}}
@@ -36,14 +37,16 @@ Content-Type: application/json
 GET http://localhost:4004/odata/v2/api-business-partner/A_BusinessPartner
     ?$top=10
     &$inlinecount=allpages
+    &$select=BusinessPartner,BusinessPartnerFullName,BusinessPartnerIsBlocked
     #&$filter=Customer ne ''
     #&$filter=BusinessPartner eq '1000038'
 Accept: application/json
 
 ### Mock
 GET http://localhost:4004/odata/v4/api-business-partner/A_BusinessPartner
-    ?$top=1
+    ?$top=2
     &$count=true
+    &$select=BusinessPartner,BusinessPartnerFullName,BusinessPartnerIsBlocked
 #    &$filter=BusinessPartner%20eq%20'1000038'
 Accept: application/json
 
