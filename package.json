@@ -59,7 +59,7 @@
       "db": {
         "kind": "sqlite",
         "credentials": {
-          "url": "db.sqlite"
+          "url": "sqlite.db"
         }
       }
     }
