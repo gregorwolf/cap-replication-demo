@@ -59,12 +59,6 @@
       "API_BUSINESS_PARTNER": {
         "kind": "odata-v2",
         "model": "srv/external/API_BUSINESS_PARTNER"
-      },
-      "db": {
-        "kind": "sqlite",
-        "credentials": {
-          "url": "sqlite.db"
-        }
       }
     }
   }
