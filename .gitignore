@@ -1,6 +1,7 @@
 # CAP replication
 _out
 *.db
+*.db-*
 connection.properties
 default-*.json
 .cdsrc-private.json
