@@ -3,16 +3,17 @@ const LOG = cds.log("replication-service");
 
 async function getEntityCountFromS4(s4entityName) {
   const API_BUSINESS_PARTNER = await cds.connect.to("API_BUSINESS_PARTNER");
-  // works when remote API is mocked locally
-  const s4entity = await API_BUSINESS_PARTNER.run(
-    SELECT`count() as count`.from(s4entityName)
-  );
-  return s4entity[0].count;
-  /*
-  // works when remote API is connected
-  const count = await API_BUSINESS_PARTNER.get(`/${s4entityName}/$count`);
-  return parseInt(count);
-  */
+  if (cds.env.env === "hybrid" || cds.env.production) {
+    // works when remote API is connected
+    const count = await API_BUSINESS_PARTNER.get(`/${s4entityName}/$count`);
+    return parseInt(count);
+  } else {
+    // works when remote API is mocked locally
+    const s4entity = await API_BUSINESS_PARTNER.run(
+      SELECT`count() as count`.from(s4entityName)
+    );
+    return s4entity[0].count;
+  }
 }
 
 async function getEntityFromS4(bp) {

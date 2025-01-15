@@ -1,5 +1,13 @@
+###
+GET https://sandbox.api.sap.com/s4hanacloud/sap/opu/odata/sap/API_BUSINESS_PARTNER/A_BusinessPartner
+    ?$top=10
+APIKey: {{$dotenv apiKey}}
+Accept: application/json
+###
+GET https://sandbox.api.sap.com/s4hanacloud/sap/opu/odata/sap/API_BUSINESS_PARTNER/A_CustomerSalesAreaText/$count
+APIKey: {{$dotenv apiKey}}
 ### Sample request to the api.sap.com Sandbox
-GET {{$dotenv s4hana}}/sap/opu/odata/sap/API_BUSINESS_PARTNER/A_BusinessPartner
+GET {{$dotenv s4hanaSandbox}}/sap/opu/odata/sap/API_BUSINESS_PARTNER/A_BusinessPartner
     ?$top=10
     &$inlinecount=allpages
     &$select=BusinessPartner,BusinessPartnerFullName,BusinessPartnerIsBlocked

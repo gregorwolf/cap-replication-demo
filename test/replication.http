@@ -16,7 +16,7 @@ POST http://localhost:4004/odata/v4/replication/loadEntitiesFromS4
 Content-Type: application/json
 
 {
-    "BlockSize": 2
+    "BlockSize": {{$dotenv BlockSize}}
 }
 ###
 POST http://localhost:4004/odata/v4/replication/deleteAllReplicatedEntities
