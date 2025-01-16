@@ -2,10 +2,16 @@ using {API_BUSINESS_PARTNER as bp} from '../srv/external/API_BUSINESS_PARTNER';
 
 namespace replication;
 
-@cds.persistence.skip: false
-entity BusinessPartner : bp.A_BusinessPartner {};
+aspect source {
+    key source : String(100);
+}
 
 @cds.persistence.skip: false
-entity CustomerSalesAreaText : bp.A_CustomerSalesAreaText {
+entity BusinessPartner : bp.A_BusinessPartner, source {
+
+};
+
+@cds.persistence.skip: false
+entity CustomerSalesAreaText : bp.A_CustomerSalesAreaText, source {
 
 }

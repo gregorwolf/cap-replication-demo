@@ -81,6 +81,7 @@ module.exports = cds.service.impl(async function () {
 
   this.on("loadEntitiesFromS4", async function (req) {
     const blockSize = req.data.BlockSize;
+    const maxCount = req.data.maxCount;
     LOG.info("loadEntitiesFromS4 - blockSize:", blockSize);
     // loop through maps4entityToLocal
     for (let index = 0; index < maps4entityToLocal.length; index++) {
@@ -88,6 +89,9 @@ module.exports = cds.service.impl(async function () {
       const count = await getEntityCountFromS4(map.s4entityName);
       LOG.info("count:", count);
       for (let top = 0; top < count; top = top + blockSize) {
+        if (maxCount && top >= maxCount) {
+          break;
+        }
         const limit = {
           offset: top,
           rows: blockSize,
@@ -100,6 +104,7 @@ module.exports = cds.service.impl(async function () {
         LOG.info("Number of Entities:", s4entities.length);
         for (let index = 0; index < s4entities.length; index++) {
           const s4entity = s4entities[index];
+          s4entity.source = "S4HANASandbox";
           await upsertEntity(map.localEntity, s4entity);
         }
       }
