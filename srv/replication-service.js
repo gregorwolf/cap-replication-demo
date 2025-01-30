@@ -2,14 +2,14 @@ const cds = require("@sap/cds");
 const LOG = cds.log("replication-service");
 
 async function getEntityCountFromS4(s4entityName) {
-  const API_BUSINESS_PARTNER = await cds.connect.to("API_BUSINESS_PARTNER");
+  const s4api = await cds.connect.to("API_BUSINESS_PARTNER");
   if (cds.env.env === "hybrid" || cds.env.production) {
     // works when remote API is connected
-    const count = await API_BUSINESS_PARTNER.get(`/${s4entityName}/$count`);
+    const count = await s4api.get(`/${s4entityName}/$count`);
     return parseInt(count);
   } else {
     // works when remote API is mocked locally
-    const s4entity = await API_BUSINESS_PARTNER.run(
+    const s4entity = await s4api.run(
       SELECT`count() as count`.from(s4entityName)
     );
     return s4entity[0].count;
@@ -17,9 +17,9 @@ async function getEntityCountFromS4(s4entityName) {
 }
 
 async function getEntityFromS4(bp) {
-  const API_BUSINESS_PARTNER = await cds.connect.to("API_BUSINESS_PARTNER");
-  const { A_BusinessPartner } = API_BUSINESS_PARTNER.entities;
-  const s4entity = await API_BUSINESS_PARTNER.run(
+  const s4api = await cds.connect.to("API_BUSINESS_PARTNER");
+  const { A_BusinessPartner } = s4api.entities;
+  const s4entity = await s4api.run(
     SELECT.one(A_BusinessPartner).where({
       BusinessPartner: bp,
     })
@@ -29,12 +29,12 @@ async function getEntityFromS4(bp) {
 }
 
 async function getEntitiesFromS4(s4entityName, limit, columns) {
-  const API_BUSINESS_PARTNER = await cds.connect.to("API_BUSINESS_PARTNER");
+  const s4api = await cds.connect.to("API_BUSINESS_PARTNER");
   let query = SELECT(`${s4entityName}`).limit(limit.rows, limit.offset);
   if (columns) {
     query = query.columns(columns);
   }
-  const s4entity = await API_BUSINESS_PARTNER.run(query);
+  const s4entity = await s4api.run(query);
   return s4entity;
 }
 
