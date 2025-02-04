@@ -1,8 +1,10 @@
 const cds = require("@sap/cds");
 const LOG = cds.log("replication-service");
 
-async function getEntityCountFromS4(s4entityName) {
-  const s4api = await cds.connect.to("API_BUSINESS_PARTNER");
+// const s4api = await cds.connect.to("API_BUSINESS_PARTNER");
+
+async function getEntityCountFromS4(s4api, s4entityName) {
+  //const s4api = await cds.connect.to(s4DestinationName);
   if (cds.env.env === "hybrid" || cds.env.production) {
     // works when remote API is connected
     const count = await s4api.get(`/${s4entityName}/$count`);
@@ -16,8 +18,7 @@ async function getEntityCountFromS4(s4entityName) {
   }
 }
 
-async function getEntityFromS4(bp) {
-  const s4api = await cds.connect.to("API_BUSINESS_PARTNER");
+async function getEntityFromS4(s4DestinationName, bp) {
   const { A_BusinessPartner } = s4api.entities;
   const s4entity = await s4api.run(
     SELECT.one(A_BusinessPartner).where({
@@ -28,8 +29,7 @@ async function getEntityFromS4(bp) {
   return s4entity;
 }
 
-async function getEntitiesFromS4(s4entityName, limit, columns) {
-  const s4api = await cds.connect.to("API_BUSINESS_PARTNER");
+async function getEntitiesFromS4(s4api, s4entityName, limit, columns) {
   let query = SELECT(`${s4entityName}`).limit(limit.rows, limit.offset);
   if (columns) {
     query = query.columns(columns);
@@ -79,7 +79,42 @@ module.exports = cds.service.impl(async function () {
     }
   );
 
+  async function loadEntitiesFromS4(s4api, blockSize, maxCount) {
+    LOG.info("loadEntitiesFromS4 - blockSize:", blockSize);
+    LOG.info(s4api);
+    // loop through maps4entityToLocal
+    for (let index = 0; index < maps4entityToLocal.length; index++) {
+      const map = maps4entityToLocal[index];
+      const count = await getEntityCountFromS4(s4api, map.s4entityName);
+      LOG.info("count:", count);
+      for (let top = 0; top < count; top = top + blockSize) {
+        if (maxCount && top >= maxCount) {
+          break;
+        }
+        const limit = {
+          offset: top,
+          rows: blockSize,
+        };
+        const s4entities = await getEntitiesFromS4(
+          s4api,
+          map.s4entityName,
+          limit,
+          map.columns
+        );
+        LOG.info("Number of Entities:", s4entities.length);
+        for (let index = 0; index < s4entities.length; index++) {
+          const s4entity = s4entities[index];
+          s4entity.source = s4api.name;
+          await upsertEntity(map.localEntity, s4entity);
+        }
+      }
+    }
+  }
+
   this.on("loadEntitiesFromS4", async function (req) {
+    const s4api = await cds.connect.to("API_BUSINESS_PARTNER_DEV");
+    await loadEntitiesFromS4(s4api, req.data.BlockSize, req.data.maxCount);
+    /*
     const blockSize = req.data.BlockSize;
     const maxCount = req.data.maxCount;
     LOG.info("loadEntitiesFromS4 - blockSize:", blockSize);
@@ -109,6 +144,7 @@ module.exports = cds.service.impl(async function () {
         }
       }
     }
+    */
   });
 
   this.on("deleteAllReplicatedEntities", async function (req) {
