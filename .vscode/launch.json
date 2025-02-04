@@ -12,6 +12,15 @@
       "skipFiles": [
         "<node_internals>/**"
       ]
+    },    
+    {
+      "command": "cds watch --profile hybrid",
+      "name": "cds watch hybrid",
+      "request": "launch",
+      "type": "node-terminal",
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
     }
   ]
 }
