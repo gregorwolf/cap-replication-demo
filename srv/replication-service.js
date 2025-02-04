@@ -4,7 +4,6 @@ const LOG = cds.log("replication-service");
 // const s4api = await cds.connect.to("API_BUSINESS_PARTNER");
 
 async function getEntityCountFromS4(s4api, s4entityName) {
-  //const s4api = await cds.connect.to(s4DestinationName);
   if (cds.env.env === "hybrid" || cds.env.production) {
     // works when remote API is connected
     const count = await s4api.get(`/${s4entityName}/$count`);
@@ -18,7 +17,7 @@ async function getEntityCountFromS4(s4api, s4entityName) {
   }
 }
 
-async function getEntityFromS4(s4DestinationName, bp) {
+async function getEntityFromS4(s4api, bp) {
   const { A_BusinessPartner } = s4api.entities;
   const s4entity = await s4api.run(
     SELECT.one(A_BusinessPartner).where({
