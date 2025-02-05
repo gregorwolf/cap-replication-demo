@@ -37,3 +37,20 @@ then run:
 ```
 cds watch --profile hybrid
 ```
+
+## In hybrid mode with a real S/4HANA System
+
+Create a file `default-env.json` and add the following content and
+
+```JSON
+{
+  "destinations": [
+    {
+      "name": "S4HANA",
+      "url": "",
+      "username": "",
+      "password": ""
+    }
+  ]
+}
+```
