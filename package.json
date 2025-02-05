@@ -19,6 +19,7 @@
   },
   "scripts": {
     "start": "cds run",
+    "start:hybrid": "cds watch --profile hybrid",
     "deploy:local": "cds deploy --with-mocks"
   },
   "eslintConfig": {
@@ -56,9 +57,9 @@
           "kind": "file-based-messaging"
         }
       },
-      "API_BUSINESS_PARTNER": {
+      "API_BUSINESS_PARTNER_DEV": {
         "kind": "odata-v2",
-        "model": "srv/external/API_BUSINESS_PARTNER",
+        "model": "srv/external/API_BUSINESS_PARTNER_DEV",
         "credentials": {
           "path": "/sap/opu/odata/sap/API_BUSINESS_PARTNER"
         },
@@ -69,7 +70,24 @@
         },
         "[production]": {
           "credentials": {
-            "destination": "S4HANA"
+            "destination": "S4HANA_DEV"
+          }
+        }
+      },
+      "API_BUSINESS_PARTNER_PROD": {
+        "kind": "odata-v2",
+        "model": "srv/external/API_BUSINESS_PARTNER_PROD",
+        "credentials": {
+          "path": "/sap/opu/odata/sap/API_BUSINESS_PARTNER"
+        },
+        "[hybrid]": {
+          "credentials": {
+            "url": "https://sandbox.api.sap.com/s4hanacloud"
+          }
+        },
+        "[production]": {
+          "credentials": {
+            "destination": "S4HANA_PROD"
           }
         }
       }
