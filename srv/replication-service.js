@@ -80,7 +80,6 @@ module.exports = cds.service.impl(async function () {
 
   async function loadEntitiesFromS4(s4api, blockSize, maxCount) {
     LOG.info("loadEntitiesFromS4 - blockSize:", blockSize);
-    LOG.info(s4api);
     // loop through maps4entityToLocal
     for (let index = 0; index < maps4entityToLocal.length; index++) {
       const map = maps4entityToLocal[index];
@@ -103,47 +102,26 @@ module.exports = cds.service.impl(async function () {
         LOG.info("Number of Entities:", s4entities.length);
         for (let index = 0; index < s4entities.length; index++) {
           const s4entity = s4entities[index];
-          s4entity.source = s4api.name;
+          s4entity.source = s4api.name;   // TODO: Decide if we use source name?
           await upsertEntity(map.localEntity, s4entity);
         }
       }
     }
-  }
+  };
 
-  this.on("loadEntitiesFromS4", async function (req) {
+  this.on("loadEntitiesFromS4Dev", async function name(req) {
     const s4api = await cds.connect.to("API_BUSINESS_PARTNER_DEV");
     await loadEntitiesFromS4(s4api, req.data.BlockSize, req.data.maxCount);
-    /*
-    const blockSize = req.data.BlockSize;
-    const maxCount = req.data.maxCount;
-    LOG.info("loadEntitiesFromS4 - blockSize:", blockSize);
-    // loop through maps4entityToLocal
-    for (let index = 0; index < maps4entityToLocal.length; index++) {
-      const map = maps4entityToLocal[index];
-      const count = await getEntityCountFromS4(map.s4entityName);
-      LOG.info("count:", count);
-      for (let top = 0; top < count; top = top + blockSize) {
-        if (maxCount && top >= maxCount) {
-          break;
-        }
-        const limit = {
-          offset: top,
-          rows: blockSize,
-        };
-        const s4entities = await getEntitiesFromS4(
-          map.s4entityName,
-          limit,
-          map.columns
-        );
-        LOG.info("Number of Entities:", s4entities.length);
-        for (let index = 0; index < s4entities.length; index++) {
-          const s4entity = s4entities[index];
-          s4entity.source = "S4HANASandbox";
-          await upsertEntity(map.localEntity, s4entity);
-        }
-      }
-    }
-    */
+  });
+
+  this.on("loadEntitiesFromS4Prod", async function(req) {
+    const s4api = await cds.connect.to("API_BUSINESS_PARTNER_PROD");
+    await loadEntitiesFromS4(s4api, req.data.BlockSize, req.data.maxCount);
+  });
+
+  this.on("loadEntitiesFromS4", async function (req) {
+    await this.loadEntitiesFromS4Dev(req.data.BlockSize, req.data.maxCount);
+    await this.loadEntitiesFromS4Prod(req.data.BlockSize, req.data.maxCount);
   });
 
   this.on("deleteAllReplicatedEntities", async function (req) {
