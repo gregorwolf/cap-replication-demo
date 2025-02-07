@@ -14,8 +14,7 @@
     "express": "^4"
   },
   "devDependencies": {
-    "@cap-js/sqlite": "^1.7.8",
-    "sqlite3": "^5"
+    "@cap-js/sqlite": "^1.7.8"
   },
   "scripts": {
     "start": "cds run",
@@ -57,9 +56,9 @@
           "kind": "file-based-messaging"
         }
       },
-      "API_BUSINESS_PARTNER_DEV": {
+      "API_BUSINESS_PARTNER": {
         "kind": "odata-v2",
-        "model": "srv/external/API_BUSINESS_PARTNER_DEV",
+        "model": "srv/external/API_BUSINESS_PARTNER",
         "credentials": {
           "path": "/sap/opu/odata/sap/API_BUSINESS_PARTNER"
         },
@@ -71,23 +70,6 @@
         "[production]": {
           "credentials": {
             "destination": "S4HANA_DEV"
-          }
-        }
-      },
-      "API_BUSINESS_PARTNER_PROD": {
-        "kind": "odata-v2",
-        "model": "srv/external/API_BUSINESS_PARTNER_PROD",
-        "credentials": {
-          "path": "/sap/opu/odata/sap/API_BUSINESS_PARTNER"
-        },
-        "[hybrid]": {
-          "credentials": {
-            "url": "https://sandbox.api.sap.com/s4hanacloud"
-          }
-        },
-        "[production]": {
-          "credentials": {
-            "destination": "S4HANA_PROD"
           }
         }
       }
