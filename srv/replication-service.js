@@ -102,26 +102,24 @@ module.exports = cds.service.impl(async function () {
         LOG.info("Number of Entities:", s4entities.length);
         for (let index = 0; index < s4entities.length; index++) {
           const s4entity = s4entities[index];
-          s4entity.source = s4api.name;   // TODO: Decide if we use source name?
+          s4entity.source = s4api.destination;   // TODO: Decide if we use source name?
           await upsertEntity(map.localEntity, s4entity);
         }
       }
     }
   };
 
-  this.on("loadEntitiesFromS4Dev", async function name(req) {
-    const s4api = await cds.connect.to("API_BUSINESS_PARTNER_DEV");
-    await loadEntitiesFromS4(s4api, req.data.BlockSize, req.data.maxCount);
-  });
-
-  this.on("loadEntitiesFromS4Prod", async function(req) {
-    const s4api = await cds.connect.to("API_BUSINESS_PARTNER_PROD");
-    await loadEntitiesFromS4(s4api, req.data.BlockSize, req.data.maxCount);
-  });
-
   this.on("loadEntitiesFromS4", async function (req) {
-    await this.loadEntitiesFromS4Dev(req.data.BlockSize, req.data.maxCount);
-    await this.loadEntitiesFromS4Prod(req.data.BlockSize, req.data.maxCount);
+    const destination = req.data.Destination;
+    const s4api = await cds.connect.to("API_BUSINESS_PARTNER", {
+        credentials: {
+          destination,
+          path: "/sap/opu/odata/sap/API_BUSINESS_PARTNER"
+        },
+      }
+    );
+
+    await loadEntitiesFromS4(s4api, req.data.BlockSize, req.data.maxCount);
   });
 
   this.on("deleteAllReplicatedEntities", async function (req) {
