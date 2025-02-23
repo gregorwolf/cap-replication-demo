@@ -19,7 +19,8 @@
   "scripts": {
     "start": "cds run",
     "start:hybrid": "cds watch --profile hybrid",
-    "deploy:local": "cds deploy --with-mocks"
+    "deploy:local": "cds deploy --with-mocks",
+    "deploy:hybrid": "cds deploy --profile hybrid"
   },
   "eslintConfig": {
     "extends": "eslint:recommended",
@@ -56,16 +57,19 @@
           "kind": "file-based-messaging"
         }
       },
+      "[hybrid]": {
+        "db": {
+          "kind": "sqlite",
+          "credentials": {
+            "url": "db.sqlite"
+          }
+        }
+      },
       "API_BUSINESS_PARTNER": {
         "kind": "odata-v2",
         "model": "srv/external/API_BUSINESS_PARTNER",
         "credentials": {
           "path": "/sap/opu/odata/sap/API_BUSINESS_PARTNER"
-        },
-        "[hybrid]": {
-          "credentials": {
-            "url": "https://sandbox.api.sap.com/s4hanacloud"
-          }
         },
         "[production]": {
           "credentials": {

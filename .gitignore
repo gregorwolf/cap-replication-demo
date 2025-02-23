@@ -30,3 +30,4 @@ mta_archives/
 # .vscode
 # .idea
 .env
+*.sqlite
