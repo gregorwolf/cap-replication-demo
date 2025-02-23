@@ -14,11 +14,11 @@
     "express": "^4"
   },
   "devDependencies": {
-    "@cap-js/sqlite": "^1.7.8",
-    "sqlite3": "^5"
+    "@cap-js/sqlite": "^1.7.8"
   },
   "scripts": {
     "start": "cds run",
+    "start:hybrid": "cds watch --profile hybrid",
     "deploy:local": "cds deploy --with-mocks"
   },
   "eslintConfig": {
@@ -69,7 +69,7 @@
         },
         "[production]": {
           "credentials": {
-            "destination": "S4HANA"
+            "destination": "S4HANA_DEV"
           }
         }
       }

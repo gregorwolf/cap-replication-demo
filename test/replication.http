@@ -16,6 +16,16 @@ POST http://localhost:4004/odata/v4/replication/loadEntitiesFromS4
 Content-Type: application/json
 
 {
+    "Destination": "S4HANA",
+    "BlockSize": {{$dotenv BlockSize}},
+    "maxCount": {{$dotenv maxCount}}
+}
+###
+POST http://localhost:4004/odata/v4/replication/loadEntitiesFromS4
+Content-Type: application/json
+
+{
+    "Destination": "S4HANA_DEV",
     "BlockSize": {{$dotenv BlockSize}},
     "maxCount": {{$dotenv maxCount}}
 }
