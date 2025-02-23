@@ -21,6 +21,12 @@ GET {{$dotenv s4hana}}/sap/opu/odata/sap/API_BUSINESS_PARTNER/A_BusinessPartner
     &$inlinecount=allpages
 Authorization: Basic {{$dotenv username}}:{{$dotenv password}}
 Accept: application/json
+###
+GET {{$dotenv s4hana}}/sap/opu/odata/sap/API_BUSINESS_PARTNER/A_CustomerSalesAreaText
+    ?$top=10
+    &$inlinecount=allpages
+Authorization: Basic {{$dotenv username}}:{{$dotenv password}}
+Accept: application/json
 
 ### Get CSRF Token
 # @name fetchCSRF
