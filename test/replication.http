@@ -5,11 +5,13 @@ GET http://localhost:4004/odata/v4/replication/$metadata
 ###
 GET http://localhost:4004/odata/v4/replication/BusinessPartner
     ?$count=true
+    &$top=10
     &$select=BusinessPartner,BusinessPartnerFullName,BusinessPartnerIsBlocked
 Accept: application/json
 ###
 GET http://localhost:4004/odata/v4/replication/CustomerSalesAreaText
     ?$count=true
+    &$top=10
 Accept: application/json
 ###
 POST http://localhost:4004/odata/v4/replication/loadEntitiesFromS4
