@@ -1,0 +1,13 @@
+###
+GET http://localhost:4004/odata/v4/upsert/
+###
+GET http://localhost:4004/odata/v4/upsert/$metadata
+###
+POST http://localhost:4004/odata/v4/upsert/entitiesInS4
+Content-Type: application/json
+
+{
+    "source": "S4HANA_DEV",
+    "target": "S4HANA",
+    "entity": "A_CustomerSalesAreaText"
+}
