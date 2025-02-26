@@ -47,6 +47,25 @@ Content-Type: application/json
     "BusinessPartnerCategory": "2",
     "OrganizationBPName1": "Computerservice Wolf"
 }
+
+
+### Get CustomerSalesAreaText
+GET {{$dotenv s4hana}}/sap/opu/odata/sap/API_BUSINESS_PARTNER/A_CustomerSalesAreaText(Customer=%271000046%27,SalesOrganization=%271010%27,DistributionChannel=%2710%27,Division=%2700%27,Language=%27DE%27,LongTextID=%27TX01%27)
+Authorization: Basic {{$dotenv username}}:{{$dotenv password}}
+#X-CSRF-Token: {{csrfToken}} // not needed on get
+Accept: application/json
+
+### Update CustomerSalesAreaText
+PATCH {{$dotenv s4hana}}/sap/opu/odata/sap/API_BUSINESS_PARTNER/A_CustomerSalesAreaText(Customer=%271000046%27,SalesOrganization=%271010%27,DistributionChannel=%2710%27,Division=%2700%27,Language=%27DE%27,LongTextID=%27TX01%27)
+Authorization: Basic {{$dotenv username}}:{{$dotenv password}}
+X-CSRF-Token: {{csrfToken}}
+Accept: application/json
+Content-Type: application/json
+
+{
+    "LongText": "Update test from REST Client"
+}
+
 ### Mock
 GET http://localhost:4004/odata/v2/api-business-partner/A_BusinessPartner
     ?$top=10
