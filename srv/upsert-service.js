@@ -58,6 +58,8 @@ module.exports = cds.service.impl(async function () {
 
       for (let Item of SourceItems){
 
+        delete Item.source;
+
         const filter = {}
         for (let key of keys){
           filter[key.name] = Item[key.name];
