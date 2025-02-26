@@ -11,7 +11,7 @@ function connectToBusinessPartnerDest(destination){
       },
     }
   );
-}
+};
 
 module.exports = cds.service.impl(async function () {
   const db = await cds.connect.to("db");
@@ -37,74 +37,57 @@ module.exports = cds.service.impl(async function () {
     const sourceApi = await connectToBusinessPartnerDest(sourceDest); // connect first to see if sources exist
     const targetApi = await connectToBusinessPartnerDest(targetDest);
 
-    if (entityMap.s4entityName != "A_CustomerSalesAreaText") {
-      cds.error(500, "entity type not implemented");
-    }
-
-    // LOG.info("Available Items:", await db.run('SELECT * FROM ' + entityMap.localEntity));
-
-    // const query = `              // group query only usefull with UPSERT
-    //   SELECT Customer,
-    //     SalesOrganization,
-    //     DistributionChannel,
-    //     Division,
-    //     Language,
-    //     LongTextID,
-    //     GROUP_CONCAT(LongText, '\n') AS LongText
-    //   FROM ` + entityMap.localEntity + `
-    //   WHERE source IN ('` + targetDest + `', '` + sourceDest + `') 
-    //   GROUP BY Customer,
-    //     SalesOrganization,
-    //     DistributionChannel,
-    //     Division,
-    //     Language,
-    //     LongTextID
-    // `;
-
     const query = SELECT.from(entityMap.localEntity).where({source: sourceDest});
 
     const SourceItems = await db.run(query);
 
-    for (let Item of SourceItems){
+    const tx = targetApi.tx();
 
-      const entities = targetApi.entities[entityMap.s4entityName];
+    try {
+      const entities = tx.entities[entityMap.s4entityName];
+      LOG.info(entities);
 
-      const targetItem = await targetApi.run(SELECT.one(entities).where({         // TODO: more flexible for other entity types
-        Customer: Item.Customer,
-        SalesOrganization: Item.SalesOrganization,
-        DistributionChannel: Item.DistributionChannel,
-        Division: Item.Division,
-        Language: Item.Language,
-        LongTextID: Item.LongTextID,
-      }));
-
-      if (targetItem){
-        targetItem.LongText = targetItem.LongText + '\n' + Item.LongText;
-
-        LOG.info(entities);
-
-        await targetApi.run(UPDATE(entities, {                                    // TODO: more flexible for other entity types
-          Customer: Item.Customer,
-          SalesOrganization: Item.SalesOrganization,
-          DistributionChannel: Item.DistributionChannel,
-          Division: Item.Division,
-          Language: Item.Language,
-          LongTextID: Item.LongTextID,
-        }).with({LongText: targetItem.LongText}));
-      } else {
-        await targetApi.run(INSERT.into(entities).entries([Item]));
+      const keys = entities.keys;
+      const elements = [];
+      for (let element of entities.elements){ // get non-key elements to update
+        if (element.key){
+          continue;
+        }
+        elements.push(element);
       }
 
+      for (let Item of SourceItems){
 
-      // await targetApi.run(UPSERT.into(entities).entries({    // UPSERT funktioniert nicht?
-      //     Customer: Item.Customer,
-      //     SalesOrganization: Item.SalesOrganization,
-      //     DistributionChannel: Item.DistributionChannel,
-      //     Division: Item.Division,
-      //     Language: Item.Language,
-      //     LongTextID: Item.LongTextID,
-      //     LongText: Item.LongText
-      // }));
+        const filter = {}
+        for (let key of keys){
+          filter[key.name] = Item[key.name];
+        }
+
+        const targetItem = await tx.run(SELECT.one(entities).where(filter));
+
+        if (targetItem){
+
+          const values = {};
+          for (let element of elements){    // build values to change
+            switch (element.type){
+              case "cds.LargeString": 
+                values[element.name] = targetItem[element.name] + '\n' + Item[element.name];
+                break;
+              default:
+                cds.error(500, `field type "${element.type}" not implemented. aborting without changes`);
+            }
+          }
+
+          await tx.run(UPDATE(entities, filter).with(values)); 
+        } else {
+          await tx.run(INSERT.into(entities).entries([Item])); // insert item without changes
+        }
+      };    
+      tx.commit();
+    } catch (error) {
+      await tx.rollback(error);
+      LOG.info("Transaction rolled back due to error:" , error);
+      throw error;
     };
 
   });
