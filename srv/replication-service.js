@@ -48,24 +48,7 @@ async function upsertBusinessPartnerFromS4(bp) {
 }
 
 module.exports = cds.service.impl(async function () {
-  const db = await cds.connect.to("db");
-  const { BusinessPartner, CustomerSalesAreaText } = db.entities;
-
-  const maps4entityToLocal = [
-    {
-      s4entityName: "A_BusinessPartner",
-      localEntity: BusinessPartner,
-      columns: [
-        "BusinessPartner",
-        "BusinessPartnerFullName",
-        "BusinessPartnerIsBlocked",
-      ],
-    },
-    {
-      s4entityName: "A_CustomerSalesAreaText",
-      localEntity: CustomerSalesAreaText,
-    },
-  ];
+  const maps4entityToLocal = await require("./map.js").maps4entityToLocal();
 
   const messaging = await cds.connect.to("messaging");
 
@@ -123,6 +106,7 @@ module.exports = cds.service.impl(async function () {
   });
 
   this.on("deleteAllReplicatedEntities", async function (req) {
+    const db = await cds.connect.to("db");
     for (let index = 0; index < maps4entityToLocal.length; index++) {
       const map = maps4entityToLocal[index];
       LOG.info("delete entries for S/4HANA Entity:", map.s4entityName);
