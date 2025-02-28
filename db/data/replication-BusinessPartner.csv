@@ -1,2 +1,5 @@
 source;BusinessPartner;BusinessPartnerFullName;BusinessPartnerIsBlocked
-S4HANASandbox;1000038;Harris Oldsmobile Inc;false
+S4HANA_DEV;1000038;Harris Oldsmobile Inc;false
+S4HANA;1000038;Harris Oldsmobile Inc;false
+S4HANA_DEV;1000040;Smith Batteries Ltd;false
+S4HANA;1000040;Smith Batteries Ltd;false
