@@ -4,6 +4,9 @@ const LOG = cds.log("replication-service");
 // const s4api = await cds.connect.to("API_BUSINESS_PARTNER");
 
 async function getEntityCountFromS4(s4api, s4entityName) {
+  // works when remote API is connected
+  const count = await s4api.get(`/${s4entityName}/$count`);
+  return parseInt(count);
   if (cds.env.env === "hybrid" || cds.env.production) {
     // works when remote API is connected
     const count = await s4api.get(`/${s4entityName}/$count`);
@@ -85,22 +88,21 @@ module.exports = cds.service.impl(async function () {
         LOG.info("Number of Entities:", s4entities.length);
         for (let index = 0; index < s4entities.length; index++) {
           const s4entity = s4entities[index];
-          s4entity.source = s4api.destination;   // TODO: Decide if we use source name?
+          s4entity.source = s4api.destination; // TODO: Decide if we use source name?
           await upsertEntity(map.localEntity, s4entity);
         }
       }
     }
-  };
+  }
 
   this.on("loadEntitiesFromS4", async function (req) {
     const destination = req.data.Destination;
     const s4api = await cds.connect.to("API_BUSINESS_PARTNER", {
-        credentials: {
-          destination,
-          path: "/sap/opu/odata/sap/API_BUSINESS_PARTNER"
-        },
-      }
-    );
+      credentials: {
+        destination,
+        path: "/sap/opu/odata/sap/API_BUSINESS_PARTNER",
+      },
+    });
 
     await loadEntitiesFromS4(s4api, req.data.BlockSize, req.data.maxCount);
   });
