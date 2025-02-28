@@ -2,7 +2,30 @@
 GET http://localhost:4004/odata/v4/replication/
 ###
 GET http://localhost:4004/odata/v4/replication/$metadata
-###
+### delete all replicated entities
+POST http://localhost:4004/odata/v4/replication/deleteAllReplicatedEntities
+Content-Type: application/json
+
+{}
+### Replicate entities from S4HANA_DEV to the local database
+POST http://localhost:4004/odata/v4/replication/loadEntitiesFromS4
+Content-Type: application/json
+
+{
+    "Destination": "S4HANA_DEV",
+    "BlockSize": {{$dotenv BlockSize}},
+    "maxCount": {{$dotenv maxCount}}
+}
+### Replicate entities from S4HANA to the local database
+POST http://localhost:4004/odata/v4/replication/loadEntitiesFromS4
+Content-Type: application/json
+
+{
+    "Destination": "S4HANA",
+    "BlockSize": {{$dotenv BlockSize}},
+    "maxCount": {{$dotenv maxCount}}
+}
+### Read replicated entities
 GET http://localhost:4004/odata/v4/replication/BusinessPartner
     ?$count=true
     &$top=10
@@ -14,26 +37,3 @@ GET http://localhost:4004/odata/v4/replication/CustomerSalesAreaText
     &$top=10
     &$orderby=Customer
 Accept: application/json
-###
-POST http://localhost:4004/odata/v4/replication/loadEntitiesFromS4
-Content-Type: application/json
-
-{
-    "Destination": "S4HANA",
-    "BlockSize": {{$dotenv BlockSize}},
-    "maxCount": {{$dotenv maxCount}}
-}
-###
-POST http://localhost:4004/odata/v4/replication/loadEntitiesFromS4
-Content-Type: application/json
-
-{
-    "Destination": "S4HANA_DEV",
-    "BlockSize": {{$dotenv BlockSize}},
-    "maxCount": {{$dotenv maxCount}}
-}
-###
-POST http://localhost:4004/odata/v4/replication/deleteAllReplicatedEntities
-Content-Type: application/json
-
-{}
