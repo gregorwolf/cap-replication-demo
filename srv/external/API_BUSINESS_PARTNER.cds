@@ -1540,7 +1540,8 @@ entity API_BUSINESS_PARTNER.A_BusinessPartner {
         to_BusinessPartnerTax          : Association to many API_BUSINESS_PARTNER.A_BusinessPartnerTaxNumber {};
 
         @cds.ambiguous     : 'missing on condition?'
-        to_Customer                    : Association to API_BUSINESS_PARTNER.A_Customer {};
+        to_Customer                    : Association to API_BUSINESS_PARTNER.A_Customer
+                                             on to_Customer.Customer = $self.Customer;
 
         @cds.ambiguous     : 'missing on condition?'
         to_Supplier                    : Association to API_BUSINESS_PARTNER.A_Supplier {};
@@ -2580,8 +2581,8 @@ entity API_BUSINESS_PARTNER.A_Customer {
         @cds.ambiguous     : 'missing on condition?'
         to_CustomerCompany           : Association to many API_BUSINESS_PARTNER.A_CustomerCompany {};
 
-        @cds.ambiguous     : 'missing on condition?'
-        to_CustomerSalesArea         : Association to many API_BUSINESS_PARTNER.A_CustomerSalesArea {};
+        to_CustomerSalesArea         : Association to many API_BUSINESS_PARTNER.A_CustomerSalesArea
+                                           on to_CustomerSalesArea.Customer = $self.Customer;
 
         @cds.ambiguous     : 'missing on condition?'
         to_CustomerTaxGrouping       : Association to many API_BUSINESS_PARTNER.A_CustomerTaxGrouping {};
@@ -3390,8 +3391,12 @@ entity API_BUSINESS_PARTNER.A_CustomerSalesArea {
         @cds.ambiguous     : 'missing on condition?'
         to_SalesAreaTax                : Association to many API_BUSINESS_PARTNER.A_CustomerSalesAreaTax {};
 
-        @cds.ambiguous     : 'missing on condition?'
-        to_SalesAreaText               : Association to many API_BUSINESS_PARTNER.A_CustomerSalesAreaText {};
+
+        to_SalesAreaText               : Association to many API_BUSINESS_PARTNER.A_CustomerSalesAreaText
+                                             on  to_SalesAreaText.Customer            = $self.Customer
+                                             and to_SalesAreaText.SalesOrganization   = $self.SalesOrganization
+                                             and to_SalesAreaText.DistributionChannel = $self.DistributionChannel
+                                             and to_SalesAreaText.Division            = $self.Division;
 };
 
 @cds.persistence.skip: true

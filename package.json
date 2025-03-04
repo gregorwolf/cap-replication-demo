@@ -59,6 +59,11 @@
             "attr": {
               "SalesOrganization": "1000"
             }
+          },
+          "bob": {
+            "attr": {
+              "SalesOrganization": "2000"
+            }
           }
         }
       },
