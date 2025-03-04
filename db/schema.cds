@@ -12,6 +12,10 @@ entity BusinessPartner : bp.A_BusinessPartner, source {
 };
 
 @cds.persistence.skip: false
+@(restrict: [{
+    grant: 'READ',
+    where: '$user.SalesOrganization = SalesOrganization'
+}])
 entity CustomerSalesAreaText : bp.A_CustomerSalesAreaText, source {
 
 }
