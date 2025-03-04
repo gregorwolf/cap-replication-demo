@@ -1,15 +1,19 @@
 ###
 GET http://localhost:4004/odata/v4/replication/
+Authorization: Basic alice:
 ###
 GET http://localhost:4004/odata/v4/replication/$metadata
+Authorization: Basic alice:
 ### delete all replicated entities
 POST http://localhost:4004/odata/v4/replication/deleteAllReplicatedEntities
 Content-Type: application/json
+Authorization: Basic alice:
 
 {}
 ### Replicate entities from S4HANA_DEV to the local database
 POST http://localhost:4004/odata/v4/replication/loadEntitiesFromS4
 Content-Type: application/json
+Authorization: Basic alice:
 
 {
     "Destination": "S4HANA_DEV",
@@ -19,6 +23,7 @@ Content-Type: application/json
 ### Replicate entities from S4HANA to the local database
 POST http://localhost:4004/odata/v4/replication/loadEntitiesFromS4
 Content-Type: application/json
+Authorization: Basic alice:
 
 {
     "Destination": "S4HANA",
@@ -29,11 +34,22 @@ Content-Type: application/json
 GET http://localhost:4004/odata/v4/replication/BusinessPartner
     ?$count=true
     &$top=10
-    &$select=BusinessPartner,BusinessPartnerFullName,BusinessPartnerIsBlocked
+    &$select=BusinessPartner,BusinessPartnerFullName,BusinessPartnerIsBlocked,source
+    &$expand=to_Customer($expand=to_CustomerSalesArea($expand=to_SalesAreaText))
 Accept: application/json
+Authorization: Basic alice:
+###
+GET http://localhost:4004/odata/v4/replication/BusinessPartner
+    ?$count=true
+    &$top=10
+    &$select=BusinessPartner,BusinessPartnerFullName,BusinessPartnerIsBlocked,source
+    &$expand=to_Customer($expand=to_CustomerSalesArea($expand=to_SalesAreaText))
+Accept: application/json
+Authorization: Basic bob:
 ###
 GET http://localhost:4004/odata/v4/replication/CustomerSalesAreaText
     ?$count=true
     &$top=10
     &$orderby=Customer
 Accept: application/json
+Authorization: Basic alice:

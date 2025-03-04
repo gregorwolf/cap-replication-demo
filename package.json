@@ -53,6 +53,20 @@
       "path": "sap/opu/odata/sap"
     },
     "requires": {
+      "auth": {
+        "users": {
+          "alice": {
+            "attr": {
+              "SalesOrganization": "1000"
+            }
+          },
+          "bob": {
+            "attr": {
+              "SalesOrganization": "2000"
+            }
+          }
+        }
+      },
       "messaging": {
         "[development]": {
           "kind": "file-based-messaging"

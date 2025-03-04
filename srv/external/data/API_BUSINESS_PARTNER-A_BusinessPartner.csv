@@ -1,4 +1,5 @@
-BusinessPartner;BusinessPartnerFullName;BusinessPartnerIsBlocked
-1000038;Harris Oldsmobile Inc;true
-1000040;Smith Batteries Ltd;false
-1000042;Johnson Automotive Supplies;true
+BusinessPartner;Customer;BusinessPartnerFullName;BusinessPartnerIsBlocked
+1000038;1000038;Harris Oldsmobile Inc;true
+1000040;1000040;Smith Batteries Ltd;false
+1000042;1000042;Johnson Automotive Supplies;true
+1000050;1000050;John Automotive Ltd;false
