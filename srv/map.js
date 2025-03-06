@@ -1,34 +1,36 @@
 exports.maps4entityToLocal = async function () {
   const db = await cds.connect.to("db");
   const {
-    BusinessPartner,
-    Customer,
-    CustomerSalesArea,
-    CustomerSalesAreaText,
+    A_BusinessPartner,
+    A_Customer,
+    A_CustomerSalesArea,
+    A_CustomerSalesAreaText,
   } = db.entities;
 
   return [
     {
       s4entityName: "A_BusinessPartner",
-      localEntity: BusinessPartner,
+      localEntity: A_BusinessPartner,
+      /*
       columns: [
         "BusinessPartner",
         "BusinessPartnerFullName",
         "BusinessPartnerIsBlocked",
         "Customer",
       ],
+      */
     },
     {
       s4entityName: "A_Customer",
-      localEntity: Customer,
+      localEntity: A_Customer,
     },
     {
       s4entityName: "A_CustomerSalesArea",
-      localEntity: CustomerSalesArea,
+      localEntity: A_CustomerSalesArea,
     },
     {
       s4entityName: "A_CustomerSalesAreaText",
-      localEntity: CustomerSalesAreaText,
+      localEntity: A_CustomerSalesAreaText,
     },
   ];
 };
