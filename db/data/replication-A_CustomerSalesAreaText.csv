@@ -1,0 +1,6 @@
+source;Customer;SalesOrganization;DistributionChannel;Division;Language;LongTextID;LongText
+S4HANA_DEV;1000038;1010;10;10;EN;Y000;This is a text existing in S4HANA_DEV
+S4HANA;1000038;1010;10;10;EN;Y000;There is also a text in S4HANA
+S4HANA_DEV;1000040;1010;10;10;EN;Y000;For 1000040 a text only exists in S4HANA_DEV
+S4HANA;1000050;1710;10;10;EN;Y000;There is also a text in S4HANA
+S4HANA_DEV;1000050;1710;10;10;EN;Y000;There is also a text in S4HANA_DEV
