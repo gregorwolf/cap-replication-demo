@@ -70,7 +70,7 @@ module.exports = cds.service.impl(async function () {
     for (let index = 0; index < maps4entityToLocal.length; index++) {
       const map = maps4entityToLocal[index];
       const count = await getEntityCountFromS4(s4api, map.s4entityName);
-      LOG.info("count:", count);
+      LOG.info("count", count, "for S/4 Entity:", map.s4entityName);
       for (let top = 0; top < count; top = top + blockSize) {
         if (maxCount && top >= maxCount) {
           break;

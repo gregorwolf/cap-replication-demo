@@ -57,12 +57,12 @@
         "users": {
           "alice": {
             "attr": {
-              "SalesOrganization": "1000"
+              "SalesOrganization": "1010"
             }
           },
           "bob": {
             "attr": {
-              "SalesOrganization": "2000"
+              "SalesOrganization": "1710"
             }
           }
         }

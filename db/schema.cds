@@ -11,8 +11,8 @@ aspect source {
     grant: 'READ',
     where: '$user.SalesOrganization = to_Customer.to_CustomerSalesArea.SalesOrganization'
 }])
-entity BusinessPartner : bp.A_BusinessPartner, source {
-    to_Customer : Association to replication.Customer
+entity A_BusinessPartner : bp.A_BusinessPartner, source {
+    to_Customer : Association to replication.A_Customer
                       on  to_Customer.Customer = $self.Customer
                       and to_Customer.source   = $self.source;
 };
@@ -22,8 +22,8 @@ entity BusinessPartner : bp.A_BusinessPartner, source {
     grant: 'READ',
     where: '$user.SalesOrganization = to_CustomerSalesArea.SalesOrganization'
 }])
-entity Customer : bp.A_Customer, source {
-    to_CustomerSalesArea : Association to many replication.CustomerSalesArea
+entity A_Customer : bp.A_Customer, source {
+    to_CustomerSalesArea : Association to many replication.A_CustomerSalesArea
                                on  to_CustomerSalesArea.Customer = $self.Customer
                                and to_CustomerSalesArea.source   = $self.source;
 
@@ -34,8 +34,8 @@ entity Customer : bp.A_Customer, source {
     grant: 'READ',
     where: '$user.SalesOrganization = SalesOrganization'
 }])
-entity CustomerSalesArea : bp.A_CustomerSalesArea, source {
-    to_SalesAreaText : Association to many replication.CustomerSalesAreaText
+entity A_CustomerSalesArea : bp.A_CustomerSalesArea, source {
+    to_SalesAreaText : Association to many replication.A_CustomerSalesAreaText
                            on  to_SalesAreaText.Customer            = $self.Customer
                            and to_SalesAreaText.SalesOrganization   = $self.SalesOrganization
                            and to_SalesAreaText.DistributionChannel = $self.DistributionChannel
@@ -48,6 +48,6 @@ entity CustomerSalesArea : bp.A_CustomerSalesArea, source {
     grant: 'READ',
     where: '$user.SalesOrganization = SalesOrganization'
 }])
-entity CustomerSalesAreaText : bp.A_CustomerSalesAreaText, source {
+entity A_CustomerSalesAreaText : bp.A_CustomerSalesAreaText, source {
 
 }
