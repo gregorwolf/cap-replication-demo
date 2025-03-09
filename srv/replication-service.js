@@ -104,7 +104,7 @@ module.exports = cds.service.impl(async function () {
       },
     });
 
-    await loadEntitiesFromS4(s4api, req.data.BlockSize, req.data.maxCount);
+    await loadEntitiesFromS4(s4api, req.data.blockSize, req.data.maxCount);
   });
 
   this.on("deleteAllReplicatedEntities", async function (req) {

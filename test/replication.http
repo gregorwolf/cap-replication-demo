@@ -17,7 +17,7 @@ Authorization: Basic alice:
 
 {
     "Destination": "S4HANA_DEV",
-    "BlockSize": {{$dotenv BlockSize}},
+    "blockSize": {{$dotenv blockSize}},
     "maxCount": {{$dotenv maxCount}}
 }
 ### Replicate entities from S4HANA to the local database
@@ -27,7 +27,7 @@ Authorization: Basic alice:
 
 {
     "Destination": "S4HANA",
-    "BlockSize": {{$dotenv BlockSize}},
+    "blockSize": {{$dotenv blockSize}},
     "maxCount": {{$dotenv maxCount}}
 }
 ### Read replicated entities

@@ -30,3 +30,11 @@ GET http://localhost:4004/sap/opu/odata/sap/API_BUSINESS_PARTNER/A_BusinessPartn
     &$expand=to_Customer,to_Customer/to_CustomerSalesArea,to_Customer/to_CustomerSalesArea/to_SalesAreaText
 Accept: application/json
 Authorization: Basic alice:
+###
+GET http://localhost:4004/sap/opu/odata/sap/API_BUSINESS_PARTNER/A_BusinessPartner
+    ?$inlinecount=allpages
+    &$top=10
+    &$select=BusinessPartner,BusinessPartnerFullName,BusinessPartnerIsBlocked,source
+    &$expand=to_Customer,to_Customer/to_CustomerSalesArea,to_Customer/to_CustomerSalesArea/to_SalesAreaText
+Accept: application/json
+Authorization: Basic bob:
