@@ -30,26 +30,3 @@ Authorization: Basic alice:
     "blockSize": {{$dotenv blockSize}},
     "maxCount": {{$dotenv maxCount}}
 }
-### Read replicated entities
-GET http://localhost:4004/odata/v4/replication/A_BusinessPartner
-    ?$count=true
-    &$top=10
-    &$select=BusinessPartner,BusinessPartnerFullName,BusinessPartnerIsBlocked,source
-    &$expand=to_Customer($expand=to_CustomerSalesArea($expand=to_SalesAreaText))
-Accept: application/json
-Authorization: Basic alice:
-###
-GET http://localhost:4004/odata/v4/replication/A_BusinessPartner
-    ?$count=true
-    &$top=10
-    &$select=BusinessPartner,BusinessPartnerFullName,BusinessPartnerIsBlocked,source
-    &$expand=to_Customer($expand=to_CustomerSalesArea($expand=to_SalesAreaText))
-Accept: application/json
-Authorization: Basic bob:
-###
-GET http://localhost:4004/odata/v4/replication/A_CustomerSalesAreaText
-    ?$count=true
-    &$top=10
-    &$orderby=Customer
-Accept: application/json
-Authorization: Basic alice:
