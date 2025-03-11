@@ -1,0 +1,50 @@
+### Get Access Token for Cloud Foundry using Password Grant
+# https://blogs.sap.com/2020/03/02/using-postman-for-api-testing-with-xsuaa/
+# @name requestUserAccessToken
+POST {{$dotenv tokenendpoint}}/oauth/token
+Accept: application/json;charset=utf8
+Authorization: Basic {{$dotenv clientid}}:{{$dotenv clientsecret}}
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=password
+&username={{$dotenv username}}
+&password={{$dotenv password}}
+&response_type=token
+### Fill Variables from Response
+@user_access_token={{requestUserAccessToken.response.body.$.access_token}}
+###
+GET {{$dotenv baseURL}}/odata/v4/API_BUSINESS_PARTNER/
+Authorization: Bearer {{user_access_token}}
+Accept: application/json
+### Read replicated entities
+GET {{$dotenv baseURL}}/odata/v4/API_BUSINESS_PARTNER/A_BusinessPartner
+    ?$count=true
+    &$top=10
+    &$select=BusinessPartner,BusinessPartnerFullName,BusinessPartnerIsBlocked,source
+    &$expand=to_BusinessPartnerAddress
+    #,to_Customer($expand=to_CustomerSalesArea($expand=to_SalesAreaText))
+Accept: application/json
+Authorization: Bearer {{user_access_token}}
+###
+GET {{$dotenv baseURL}}/odata/v4/API_BUSINESS_PARTNER/A_BusinessPartnerAddress
+    ?$count=true
+    &$top=10
+Accept: application/json
+Authorization: Bearer {{user_access_token}}
+###
+GET {{$dotenv baseURL}}/odata/v4/API_BUSINESS_PARTNER/A_CustomerSalesAreaText
+    ?$count=true
+    &$top=10
+    &$orderby=Customer
+Accept: application/json
+Authorization: Bearer {{user_access_token}}
+
+### V2
+GET {{$dotenv baseURL}}/sap/opu/odata/sap/API_BUSINESS_PARTNER/A_BusinessPartner
+    ?$inlinecount=allpages
+    &$top=10
+    &$select=BusinessPartner,BusinessPartnerFullName,BusinessPartnerIsBlocked,source
+    &$expand=to_Customer,to_Customer/to_CustomerSalesArea,to_Customer/to_CustomerSalesArea/to_SalesAreaText
+Accept: application/json
+Authorization: Bearer {{user_access_token}}
+
