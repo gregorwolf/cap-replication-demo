@@ -5,6 +5,9 @@
   "repository": "https://github.com/gregorwolf/cap-replication-demo",
   "license": "UNLICENSED",
   "private": true,
+  "engines": {
+    "node": "^20"
+  },
   "dependencies": {
     "@cap-js-community/odata-v2-adapter": "^1",
     "@sap-cloud-sdk/connectivity": "^3.25.0",
@@ -20,7 +23,7 @@
     "@sap/cds-dk": "^8"
   },
   "scripts": {
-    "start": "cds run",
+    "start": "cds-serve",
     "start:hybrid": "cds watch --profile hybrid",
     "deploy:local": "cds deploy --with-mocks",
     "deploy:hybrid": "cds deploy --profile hybrid"
@@ -71,9 +74,7 @@
         }
       },
       "messaging": {
-        "[development]": {
-          "kind": "file-based-messaging"
-        }
+        "kind": "file-based-messaging"
       },
       "[hybrid]": {
         "db": {

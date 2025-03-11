@@ -15,6 +15,8 @@ modules:
     type: nodejs
     path: gen/srv
     parameters:
+      memory: 256M
+      disk-quota: 2G
       instances: 1
       buildpack: nodejs_buildpack
     build-parameters:
@@ -27,14 +29,18 @@ modules:
       - name: cap-replication-destination
       - name: cap-replication-db
       - name: cap-replication-auth
+      - name: cap-replication-logging
 
   - name: cap-replication-db-deployer
     type: hdb
     path: gen/db
     parameters:
+      memory: 256M
+      disk-quota: 2G
       buildpack: nodejs_buildpack
     requires:
       - name: cap-replication-db
+      - name: cap-replication-logging
 
 resources:
   - name: cap-replication-destination
@@ -54,5 +60,12 @@ resources:
       service-plan: application
       path: ./xs-security.json
       config:
-        xsappname: cap-replication-${org}-${space}
+        xsappname: cap-replication-auth
+        # Space in org or space name isn't allowed in xsappname
+        # -${org}-${space}
         tenant-mode: dedicated
+  - name: cap-replication-logging
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: application-logs
+      service-plan: lite
