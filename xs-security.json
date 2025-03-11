@@ -1,0 +1,34 @@
+{
+  "scopes": [
+    {
+      "name": "uaa.user",
+      "description": "UAA"
+    }
+  ],
+  "attributes": [
+    {
+      "name": "SalesOrganization",
+      "description": "SalesOrganization",
+      "valueType": "s",
+      "valueRequired": false
+    }
+  ],
+  "role-templates": [
+    {
+      "name": "userattributes",
+      "description": "generated",
+      "default-role-name": "Attributes of a User",
+      "scope-references": [],
+      "attribute-references": ["SalesOrganization"]
+    },
+    {
+      "name": "Token_Exchange",
+      "description": "UAA",
+      "scope-references": ["uaa.user"]
+    }
+  ],
+  "oauth2-configuration": {
+    "credential-types": ["binding-secret", "x509"],
+    "redirect-uris": ["https://*.hana.ondemand.com/**", "http://localhost:*/**"]
+  }
+}
