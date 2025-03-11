@@ -5,6 +5,7 @@ exports.maps4entityToLocal = async function () {
     A_Customer,
     A_CustomerSalesArea,
     A_CustomerSalesAreaText,
+    A_BusinessPartnerAddress,
   } = db.entities;
 
   return [
@@ -31,6 +32,10 @@ exports.maps4entityToLocal = async function () {
     {
       s4entityName: "A_CustomerSalesAreaText",
       localEntity: A_CustomerSalesAreaText,
+    },
+    {
+      s4entityName: "A_BusinessPartnerAddress",
+      localEntity: A_BusinessPartnerAddress,
     },
   ];
 };

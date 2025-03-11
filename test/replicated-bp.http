@@ -1,9 +1,14 @@
+###
+GET http://localhost:4004/odata/v4/API_BUSINESS_PARTNER/
+Accept: application/json
+Authorization: Basic alice:
 ### Read replicated entities
 GET http://localhost:4004/odata/v4/API_BUSINESS_PARTNER/A_BusinessPartner
     ?$count=true
     &$top=10
     &$select=BusinessPartner,BusinessPartnerFullName,BusinessPartnerIsBlocked,source
-    &$expand=to_Customer($expand=to_CustomerSalesArea($expand=to_SalesAreaText))
+    &$expand=to_BusinessPartnerAddress
+    #,to_Customer($expand=to_CustomerSalesArea($expand=to_SalesAreaText))
 Accept: application/json
 Authorization: Basic alice:
 ###
@@ -12,6 +17,12 @@ GET http://localhost:4004/odata/v4/API_BUSINESS_PARTNER/A_BusinessPartner
     &$top=10
     &$select=BusinessPartner,BusinessPartnerFullName,BusinessPartnerIsBlocked,source
     &$expand=to_Customer($expand=to_CustomerSalesArea($expand=to_SalesAreaText))
+Accept: application/json
+Authorization: Basic bob:
+###
+GET http://localhost:4004/odata/v4/API_BUSINESS_PARTNER/A_BusinessPartnerAddress
+    ?$count=true
+    &$top=10
 Accept: application/json
 Authorization: Basic bob:
 ###

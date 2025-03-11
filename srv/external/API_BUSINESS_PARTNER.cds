@@ -1518,33 +1518,32 @@ entity API_BUSINESS_PARTNER.A_BusinessPartner {
         @sap.quickinfo     : 'Company ID of Trading Partner'
         TradingPartner                 : String(6);
 
-        @cds.ambiguous     : 'missing on condition?'
-        to_BuPaIdentification          : Association to many API_BUSINESS_PARTNER.A_BuPaIdentification {};
+        to_BuPaIdentification          : Association to many API_BUSINESS_PARTNER.A_BuPaIdentification
+                                             on to_BuPaIdentification.BusinessPartner = $self.BusinessPartner;
 
-        @cds.ambiguous     : 'missing on condition?'
-        to_BuPaIndustry                : Association to many API_BUSINESS_PARTNER.A_BuPaIndustry {};
+        to_BuPaIndustry                : Association to many API_BUSINESS_PARTNER.A_BuPaIndustry
+                                             on to_BuPaIndustry.BusinessPartner = $self.BusinessPartner;
 
-        @cds.ambiguous     : 'missing on condition?'
-        to_BusinessPartnerAddress      : Association to many API_BUSINESS_PARTNER.A_BusinessPartnerAddress {};
+        to_BusinessPartnerAddress      : Association to many API_BUSINESS_PARTNER.A_BusinessPartnerAddress
+                                             on to_BusinessPartnerAddress.BusinessPartner = $self.BusinessPartner;
 
-        @cds.ambiguous     : 'missing on condition?'
-        to_BusinessPartnerBank         : Association to many API_BUSINESS_PARTNER.A_BusinessPartnerBank {};
+        to_BusinessPartnerBank         : Association to many API_BUSINESS_PARTNER.A_BusinessPartnerBank
+                                             on to_BusinessPartnerBank.BusinessPartner = $self.BusinessPartner;
 
-        @cds.ambiguous     : 'missing on condition?'
-        to_BusinessPartnerContact      : Association to many API_BUSINESS_PARTNER.A_BusinessPartnerContact {};
+        to_BusinessPartnerContact      : Association to many API_BUSINESS_PARTNER.A_BusinessPartnerContact
+                                             on to_BusinessPartnerContact.BusinessPartnerCompany = $self.BusinessPartner;
 
-        @cds.ambiguous     : 'missing on condition?'
-        to_BusinessPartnerRole         : Association to many API_BUSINESS_PARTNER.A_BusinessPartnerRole {};
+        to_BusinessPartnerRole         : Association to many API_BUSINESS_PARTNER.A_BusinessPartnerRole
+                                             on to_BusinessPartnerRole.BusinessPartner = $self.BusinessPartner;
 
-        @cds.ambiguous     : 'missing on condition?'
-        to_BusinessPartnerTax          : Association to many API_BUSINESS_PARTNER.A_BusinessPartnerTaxNumber {};
+        to_BusinessPartnerTax          : Association to many API_BUSINESS_PARTNER.A_BusinessPartnerTaxNumber
+                                             on to_BusinessPartnerTax.BusinessPartner = $self.BusinessPartner;
 
-        @cds.ambiguous     : 'missing on condition?'
         to_Customer                    : Association to API_BUSINESS_PARTNER.A_Customer
                                              on to_Customer.Customer = $self.Customer;
 
-        @cds.ambiguous     : 'missing on condition?'
-        to_Supplier                    : Association to API_BUSINESS_PARTNER.A_Supplier {};
+        to_Supplier                    : Association to API_BUSINESS_PARTNER.A_Supplier
+                                             on to_Supplier.Supplier = $self.Supplier;
 };
 
 @cds.persistence.skip: true
@@ -1936,23 +1935,23 @@ entity API_BUSINESS_PARTNER.A_BusinessPartnerAddress {
         @sap.label         : 'Township'
         TownshipName               : String(40);
 
-        @cds.ambiguous     : 'missing on condition?'
-        to_AddressUsage            : Association to many API_BUSINESS_PARTNER.A_BuPaAddressUsage {};
+        to_AddressUsage            : Association to many API_BUSINESS_PARTNER.A_BuPaAddressUsage
+                                         on to_AddressUsage.BusinessPartner = $self.BusinessPartner;
 
-        @cds.ambiguous     : 'missing on condition?'
-        to_EmailAddress            : Association to many API_BUSINESS_PARTNER.A_AddressEmailAddress {};
+        to_EmailAddress            : Association to many API_BUSINESS_PARTNER.A_AddressEmailAddress
+                                         on to_EmailAddress.AddressID = $self.AddressID;
 
-        @cds.ambiguous     : 'missing on condition?'
-        to_FaxNumber               : Association to many API_BUSINESS_PARTNER.A_AddressFaxNumber {};
+        to_FaxNumber               : Association to many API_BUSINESS_PARTNER.A_AddressFaxNumber
+                                         on to_FaxNumber.AddressID = $self.AddressID;
 
-        @cds.ambiguous     : 'missing on condition?'
-        to_MobilePhoneNumber       : Association to many API_BUSINESS_PARTNER.A_AddressPhoneNumber {};
+        to_MobilePhoneNumber       : Association to many API_BUSINESS_PARTNER.A_AddressPhoneNumber
+                                         on to_MobilePhoneNumber.AddressID = $self.AddressID;
 
-        @cds.ambiguous     : 'missing on condition?'
-        to_PhoneNumber             : Association to many API_BUSINESS_PARTNER.A_AddressPhoneNumber {};
+        to_PhoneNumber             : Association to many API_BUSINESS_PARTNER.A_AddressPhoneNumber
+                                         on to_PhoneNumber.AddressID = $self.AddressID;
 
-        @cds.ambiguous     : 'missing on condition?'
-        to_URLAddress              : Association to many API_BUSINESS_PARTNER.A_AddressHomePageURL {};
+        to_URLAddress              : Association to many API_BUSINESS_PARTNER.A_AddressHomePageURL
+                                         on to_URLAddress.AddressID = $self.AddressID;
 };
 
 @cds.persistence.skip: true

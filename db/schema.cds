@@ -12,9 +12,13 @@ aspect source {
     where: '$user.SalesOrganization = to_Customer.to_CustomerSalesArea.SalesOrganization'
 }])
 entity A_BusinessPartner : bp.A_BusinessPartner, source {
-    to_Customer : Association to replication.A_Customer
-                      on  to_Customer.Customer = $self.Customer
-                      and to_Customer.source   = $self.source;
+    to_Customer               : Association to replication.A_Customer
+                                    on  to_Customer.Customer = $self.Customer
+                                    and to_Customer.source   = $self.source;
+    to_BusinessPartnerAddress : Association to many replication.A_BusinessPartnerAddress
+                                    on  to_BusinessPartnerAddress.BusinessPartner = $self.BusinessPartner
+                                    and to_BusinessPartnerAddress.source          = $self.source;
+
 };
 
 @cds.persistence.skip: false
@@ -50,4 +54,15 @@ entity A_CustomerSalesArea : bp.A_CustomerSalesArea, source {
 }])
 entity A_CustomerSalesAreaText : bp.A_CustomerSalesAreaText, source {
 
+}
+
+@cds.persistence.skip: false
+@(restrict: [{
+    grant: 'READ',
+    where: '$user.SalesOrganization = to_BusinessPartner.to_Customer.to_CustomerSalesArea.SalesOrganization'
+}])
+entity A_BusinessPartnerAddress : bp.A_BusinessPartnerAddress, source {
+    to_BusinessPartner : Association to one replication.A_BusinessPartner
+                             on  to_BusinessPartner.BusinessPartner = $self.BusinessPartner
+                             and to_BusinessPartner.source          = $self.source;
 }
