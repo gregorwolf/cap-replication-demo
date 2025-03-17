@@ -32,7 +32,13 @@ GET http://localhost:4004/odata/v4/API_BUSINESS_PARTNER/A_CustomerSalesAreaText
     &$orderby=Customer
 Accept: application/json
 Authorization: Basic alice:
-
+### V2
+GET http://localhost:4004/sap/opu/odata/sap/API_BUSINESS_PARTNER/
+Accept: application/json
+Authorization: Basic alice:
+### V2
+GET http://localhost:4004/sap/opu/odata/sap/API_BUSINESS_PARTNER/$metadata
+Authorization: Basic alice:
 ### V2
 GET http://localhost:4004/sap/opu/odata/sap/API_BUSINESS_PARTNER/A_BusinessPartner
     ?$inlinecount=allpages
