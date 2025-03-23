@@ -63,7 +63,10 @@
         "users": {
           "alice": {
             "attr": {
-              "SalesOrganization": "1010"
+              "SalesOrganization": [
+                "1010",
+                "1710"
+              ]
             }
           },
           "bob": {

@@ -1,3 +1,4 @@
 Customer;SalesOrganization;DistributionChannel;Division;Language;LongTextID;LongText
-1000038;1000;10;10;EN;Y000;There is also a text in S4HANA
+1000038;1010;10;10;EN;Y000;There is also a text in S4HANA
+1000040;2000;10;10;EN;Y000;Text for 1000040 in Sales Organization 2000
 1000050;2000;10;10;EN;Y000;There is also a text in S4HANA
