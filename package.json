@@ -6,7 +6,7 @@
   "license": "UNLICENSED",
   "private": true,
   "engines": {
-    "node": "^20"
+    "node": "^22"
   },
   "dependencies": {
     "@cap-js-community/odata-v2-adapter": "^1",
