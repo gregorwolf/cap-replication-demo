@@ -15,7 +15,8 @@ function connectToBusinessPartnerDest(destination){
 
 module.exports = cds.service.impl(async function () {
   const db = await cds.connect.to("db");
-  const maps4entityToLocal = await require("./map.js").maps4entityToLocal();
+  const maps4entityToLocal =
+    (await require("./map.js").apiMappingConfiguration()).API_BUSINESS_PARTNER.mapping;
 
   function getMapBys4entity(s4entityName){
     for (let index = 0; index < maps4entityToLocal.length; index++) {
@@ -93,6 +94,5 @@ module.exports = cds.service.impl(async function () {
     };
 
   });
-
 
 });

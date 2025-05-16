@@ -1,4 +1,4 @@
-exports.maps4entityToLocal = async function () {
+exports.apiMappingConfiguration = async function () {
   const db = await cds.connect.to("db");
   const {
     A_BusinessPartner,
@@ -8,34 +8,53 @@ exports.maps4entityToLocal = async function () {
     A_BusinessPartnerAddress,
   } = db.entities;
 
-  return [
-    {
-      s4entityName: "A_BusinessPartner",
-      localEntity: A_BusinessPartner,
-      /*
-      columns: [
-        "BusinessPartner",
-        "BusinessPartnerFullName",
-        "BusinessPartnerIsBlocked",
-        "Customer",
+  return {
+    API_BUSINESS_PARTNER: {
+      filter: {
+        SalesOrganization: {
+          in: [
+            "1020",
+            "2210",
+            "2211",
+            "2212",
+            "2213",
+            "2214",
+            "2215",
+            "2216",
+            "2217",
+          ],
+        },
+      },
+      mapping: [
+        {
+          s4entityName: "A_BusinessPartner",
+          localEntity: A_BusinessPartner,
+          /*
+        columns: [
+          "BusinessPartner",
+          "BusinessPartnerFullName",
+          "BusinessPartnerIsBlocked",
+          "Customer",
+        ],
+        */
+        },
+        {
+          s4entityName: "A_Customer",
+          localEntity: A_Customer,
+        },
+        {
+          s4entityName: "A_CustomerSalesArea",
+          localEntity: A_CustomerSalesArea,
+        },
+        {
+          s4entityName: "A_CustomerSalesAreaText",
+          localEntity: A_CustomerSalesAreaText,
+        },
+        {
+          s4entityName: "A_BusinessPartnerAddress",
+          localEntity: A_BusinessPartnerAddress,
+        },
       ],
-      */
     },
-    {
-      s4entityName: "A_Customer",
-      localEntity: A_Customer,
-    },
-    {
-      s4entityName: "A_CustomerSalesArea",
-      localEntity: A_CustomerSalesArea,
-    },
-    {
-      s4entityName: "A_CustomerSalesAreaText",
-      localEntity: A_CustomerSalesAreaText,
-    },
-    {
-      s4entityName: "A_BusinessPartnerAddress",
-      localEntity: A_BusinessPartnerAddress,
-    },
-  ];
+  };
 };

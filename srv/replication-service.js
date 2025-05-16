@@ -51,8 +51,8 @@ async function upsertBusinessPartnerFromS4(bp) {
 }
 
 module.exports = cds.service.impl(async function () {
-  const maps4entityToLocal = await require("./map.js").maps4entityToLocal();
-
+  const apiMappingConfiguration =
+    await require("./map.js").apiMappingConfiguration();
   const messaging = await cds.connect.to("messaging");
 
   messaging.on(
@@ -66,6 +66,10 @@ module.exports = cds.service.impl(async function () {
 
   async function loadEntitiesFromS4(s4api, blockSize, maxCount) {
     LOG.info("loadEntitiesFromS4 - blockSize:", blockSize);
+    // read the mapping corresponding to the s4api.name
+    const maps4entityToLocal = apiMappingConfiguration[s4api.name].mapping;
+    // read the filter corresponding to the s4api.name
+    const filter = apiMappingConfiguration[s4api.name].filter;
     // loop through maps4entityToLocal
     for (let index = 0; index < maps4entityToLocal.length; index++) {
       const map = maps4entityToLocal[index];
