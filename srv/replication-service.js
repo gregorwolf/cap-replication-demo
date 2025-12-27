@@ -3,6 +3,22 @@ const LOG = cds.log("replication-service");
 
 // const s4api = await cds.connect.to("API_BUSINESS_PARTNER");
 
+async function getS4apiConnection(destination, s4apiName) {
+  const path = cds.requires[s4apiName]?.credentials?.path;
+  const destinationOptions = {
+    credentials: {
+      destination,
+      path,
+    },
+  };
+  // If requestTimeout is defined in the credentials, add it to the options
+  if (cds.requires[s4apiName]?.credentials?.requestTimeout) {
+    destinationOptions.credentials.requestTimeout =
+      cds.requires[s4apiName].credentials.requestTimeout;
+  }
+  return cds.connect.to(s4apiName, destinationOptions);
+}
+
 async function getEntityCountFromS4(s4api, s4entityName) {
   // works when remote API is connected
   const count = await s4api.get(`/${s4entityName}/$count`);
@@ -100,14 +116,7 @@ module.exports = cds.service.impl(async function () {
   }
 
   this.on("loadEntitiesFromS4", async function (req) {
-    const destination = req.data.Destination;
-    const s4api = await cds.connect.to("API_BUSINESS_PARTNER", {
-      credentials: {
-        destination,
-        path: "/sap/opu/odata/sap/API_BUSINESS_PARTNER",
-      },
-    });
-
+    let s4api = await getS4apiConnection(req.data.Destination, req.data.s4api);
     await loadEntitiesFromS4(s4api, req.data.blockSize, req.data.maxCount);
   });
 

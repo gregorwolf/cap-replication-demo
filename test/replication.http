@@ -16,6 +16,7 @@ Content-Type: application/json
 Authorization: Basic alice:
 
 {
+    "s4api": "{{$dotenv s4api}}",
     "Destination": "S4HANA_DEV",
     "blockSize": {{$dotenv blockSize}},
     "maxCount": {{$dotenv maxCount}}
@@ -26,6 +27,7 @@ Content-Type: application/json
 Authorization: Basic alice:
 
 {
+    "s4api": "{{$dotenv s4api}}",
     "Destination": "S4HANA",
     "blockSize": {{$dotenv blockSize}},
     "maxCount": {{$dotenv maxCount}}
