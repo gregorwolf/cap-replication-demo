@@ -10,17 +10,17 @@
   },
   "dependencies": {
     "@cap-js-community/odata-v2-adapter": "^1",
-    "@sap-cloud-sdk/connectivity": "^3.25.0",
-    "@sap-cloud-sdk/http-client": "^3.25.0",
-    "@sap-cloud-sdk/resilience": "^3.25.0",
-    "@sap/cds": "^8",
+    "@sap-cloud-sdk/connectivity": "^4.2.0",
+    "@sap-cloud-sdk/http-client": "^4.2.0",
+    "@sap-cloud-sdk/resilience": "^4.2.0",
+    "@sap/cds": "^9",
     "express": "^4",
-    "@cap-js/hana": "^1",
+    "@cap-js/hana": "^2",
     "@sap/xssec": "^4"
   },
   "devDependencies": {
-    "@cap-js/sqlite": "^1.7.8",
-    "@sap/cds-dk": "^8"
+    "@cap-js/sqlite": "^2",
+    "@sap/cds-dk": "^9"
   },
   "scripts": {
     "start": "cds-serve",
@@ -64,8 +64,10 @@
           "alice": {
             "attr": {
               "SalesOrganization": [
-                "1010",
-                "1710"
+                "1010"
+              ],
+              "Plant": [
+                "1010"
               ]
             }
           },
@@ -102,6 +104,23 @@
           "credentials": {
             "destination": "S4HANA_DEV",
             "path": "/sap/opu/odata/sap/API_BUSINESS_PARTNER"
+          }
+        }
+      },
+      "PRODUCT_0002": {
+        "kind": "odata",
+        "model": "srv/external/PRODUCT_0002",
+        "csrf": true,
+        "[hybrid]": {
+          "credentials": {
+            "destination": "S4HANA_DEV",
+            "path": "/sap/opu/odata4/sap/api_product/srvd_a2x/sap/product/0002"
+          }
+        },
+        "[production]": {
+          "credentials": {
+            "destination": "S4HANA_DEV",
+            "path": "/sap/opu/odata4/sap/api_product/srvd_a2x/sap/product/0002"
           }
         }
       },
