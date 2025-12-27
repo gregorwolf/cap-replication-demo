@@ -1,0 +1,22 @@
+###
+GET http://localhost:4004/sap/opu/odata4/sap/api_product/srvd_a2x/sap/product/0002/
+Accept: application/json
+Authorization: Basic alice:
+### Read replicated entities
+GET http://localhost:4004/sap/opu/odata4/sap/api_product/srvd_a2x/sap/product/0002/Product
+    ?$count=true
+    &$top=10
+Accept: application/json
+Authorization: Basic alice:
+###
+GET http://localhost:4004/sap/opu/odata4/sap/api_product/srvd_a2x/sap/product/0002/ProductBasicText
+    ?$count=true
+    &$top=10
+Accept: application/json
+Authorization: Basic bob:
+###
+GET http://localhost:4004/sap/opu/odata4/sap/api_product/srvd_a2x/sap/product/0002/ProductDescription
+    ?$count=true
+    &$top=10
+Accept: application/json
+Authorization: Basic bob:
