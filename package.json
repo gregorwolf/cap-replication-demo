@@ -125,7 +125,13 @@
         }
       },
       "[production]": {
-        "db": "hana",
+        "db": {
+          "kind": "hana",
+          "model": [
+            "db/hana",
+            "srv/hana"
+          ]
+        },
         "auth": {
           "kind": "xsuaa"
         }

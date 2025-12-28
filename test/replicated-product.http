@@ -22,3 +22,10 @@ GET http://localhost:4004/sap/opu/odata4/sap/api_product/srvd_a2x/sap/product/00
     &$filter=Language eq 'EN'
 Accept: application/json
 Authorization: Basic alice:
+###
+@query="bike"
+### Prerequisite: Deploy to HANA with Natural Language Processing (NLP) enabled
+GET http://localhost:4004/sap/opu/odata4/sap/api_product/srvd_a2x/sap/product/0002/ProductBasicTextSearch(query='{{query}}')/Set
+    ?$filter=Language eq 'EN'
+Accept: application/json
+Authorization: Basic alice:

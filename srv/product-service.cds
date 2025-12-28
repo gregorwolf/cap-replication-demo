@@ -9,7 +9,10 @@ service PRService {
     entity Product                        as projection on replication.Product;
     entity ProductChangeMaster            as projection on replication.ProductChangeMaster;
     entity ProductDescription             as projection on replication.ProductDescription;
+
+    @cds.redirection.target
     entity ProductBasicText               as projection on replication.ProductBasicText;
+
     entity ProductInspectionText          as projection on replication.ProductInspectionText;
     entity ProductInternalComment         as projection on replication.ProductInternalComment;
     entity ProductPurchaseOrderText       as projection on replication.ProductPurchaseOrderText;
