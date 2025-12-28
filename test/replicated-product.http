@@ -8,15 +8,17 @@ GET http://localhost:4004/sap/opu/odata4/sap/api_product/srvd_a2x/sap/product/00
     &$top=10
 Accept: application/json
 Authorization: Basic alice:
+### Short text with 40 characters
+GET http://localhost:4004/sap/opu/odata4/sap/api_product/srvd_a2x/sap/product/0002/ProductDescription
+    ?$count=true
+    &$top=10
+    &$filter=Language eq 'EN'
+Accept: application/json
+Authorization: Basic alice:
 ###
 GET http://localhost:4004/sap/opu/odata4/sap/api_product/srvd_a2x/sap/product/0002/ProductBasicText
     ?$count=true
     &$top=10
+    &$filter=Language eq 'EN'
 Accept: application/json
-Authorization: Basic bob:
-###
-GET http://localhost:4004/sap/opu/odata4/sap/api_product/srvd_a2x/sap/product/0002/ProductDescription
-    ?$count=true
-    &$top=10
-Accept: application/json
-Authorization: Basic bob:
+Authorization: Basic alice:

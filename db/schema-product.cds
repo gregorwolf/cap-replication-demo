@@ -7,10 +7,16 @@ namespace replication;
 /*  PRODUCT ODATA V4 */
 
 @cds.persistence.skip: false
-@(restrict: [{
-    grant: 'READ',
-    where: 'exists _ProductSalesDelivery[ProductSalesOrg = $user.SalesOrganization] or exists _ProductPlant[Plant = $user.Plant]'
-}])
+@(restrict: [
+    {
+        grant: 'READ',
+        where: 'exists _ProductSalesDelivery[ProductSalesOrg = $user.SalesOrganization] or exists _ProductPlant[Plant = $user.Plant]'
+    },
+    {
+        grant: '*',
+        to   : 'admin'
+    }
+])
 entity Product : pr.Product, source {
     _ProductChangeMaster      : Composition of many replication.ProductChangeMaster
                                     on  _ProductChangeMaster.Product = $self.Product
@@ -83,10 +89,16 @@ entity ProductChangeMaster : pr.ProductChangeMaster, source {
 
 
 @cds.persistence.skip: false
-@(restrict: [{
-    grant: 'READ',
-    where: 'exists _Product._ProductSalesDelivery[ProductSalesOrg = $user.SalesOrganization] or exists _Product._ProductPlant[Plant = $user.Plant]'
-}])
+@(restrict: [
+    {
+        grant: 'READ',
+        where: 'exists _Product._ProductSalesDelivery[ProductSalesOrg = $user.SalesOrganization] or exists _Product._ProductPlant[Plant = $user.Plant]'
+    },
+    {
+        grant: '*',
+        to   : 'admin'
+    }
+])
 entity ProductDescription : pr.ProductDescription, source {
 
     _Product : Association to one replication.Product
@@ -96,10 +108,16 @@ entity ProductDescription : pr.ProductDescription, source {
 };
 
 @cds.persistence.skip: false
-@(restrict: [{
-    grant: 'READ',
-    where: 'exists _Product._ProductSalesDelivery[ProductSalesOrg = $user.SalesOrganization] or exists _Product._ProductPlant[Plant = $user.Plant]'
-}])
+@(restrict: [
+    {
+        grant: 'READ',
+        where: 'exists _Product._ProductSalesDelivery[ProductSalesOrg = $user.SalesOrganization] or exists _Product._ProductPlant[Plant = $user.Plant]'
+    },
+    {
+        grant: '*',
+        to   : 'admin'
+    }
+])
 entity ProductBasicText : pr.ProductBasicText, source {
 
     _Product : Association to one replication.Product
