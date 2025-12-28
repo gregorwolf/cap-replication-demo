@@ -112,6 +112,14 @@ exports.apiMappingConfiguration = async function () {
           s4entityName: "ProductDescription",
           localEntity: ProductDescription,
         },
+        {
+          s4entityName: "ProductSalesDelivery",
+          localEntity: ProductSalesDelivery,
+        },
+        {
+          s4entityName: "ProductPlant",
+          localEntity: ProductPlant,
+        },
         /*
         {
           s4entityName: "ProductChangeMaster",
@@ -124,10 +132,6 @@ exports.apiMappingConfiguration = async function () {
         {
           s4entityName: "ProductEWMWarehouse",
           localEntity: ProductEWMWarehouse,
-        },
-        {
-          s4entityName: "ProductPlant",
-          localEntity: ProductPlant,
         },
         {
           s4entityName: "ProductPlantCosting",
@@ -196,10 +200,6 @@ exports.apiMappingConfiguration = async function () {
         {
           s4entityName: "ProductSales",
           localEntity: ProductSales,
-        },
-        {
-          s4entityName: "ProductSalesDelivery",
-          localEntity: ProductSalesDelivery,
         },
         {
           s4entityName: "ProductStorage",
